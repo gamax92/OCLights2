@@ -26,7 +26,6 @@ import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
-import dan200.computercraft.api.peripheral.IComputerAccess;
 import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.ClientDrawThread;
 import ds.mods.OCLights2.Config;

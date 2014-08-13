@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -11,16 +15,13 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import ds.mods.OCLights2.converter.ConvertInteger;
 import ds.mods.OCLights2.gpu.GPU;
 import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.utils.TabMesg;
 import ds.mods.OCLights2.utils.TabMesg.Message;
 
-public class TileEntityTTrans extends TileEntityMonitor implements IPeripheral {
+public class TileEntityTTrans extends TileEntityMonitor implements SimpleComponent {
 	public UUID id = UUID.randomUUID();
 	public ArrayList<UUID> tablets = new ArrayList<UUID>();
 	
@@ -184,50 +185,35 @@ public class TileEntityTTrans extends TileEntityMonitor implements IPeripheral {
 			update = false;
 		}
 	}
-	@Override
-	public String[] getMethodNames() {
-		return new String[]{"getResolution","getNumberOfTablets","getTabletUUID","disconnect"};
+	
+	@Callback
+	public Object[] getResolution(Context context, Arguments arguments) {
+		return new Object[]{mon.getWidth(),mon.getHeight()};
 	}
 
-	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context,int method, Object[] arguments) 
-			throws Exception {
-		switch (method)
-		{
-		case 0:
-		{
-			return new Object[]{mon.getWidth(),mon.getHeight()};
-		}
-		case 1:
-		{
-			return new Object[]{tablets.size()};
-		}
-		case 2:
-		{
-			return new Object[]{tablets.get(ConvertInteger.convert(arguments[0])).toString()};
-		}
-		case 3:
-		{
-           invalidate();
-		}
-		}
+	@Callback
+	public Object[] getNumberOfTablets(Context context, Arguments arguments) {
+		return new Object[]{tablets.size()};
+	}
+	
+	@Callback
+	public Object[] getTabletUUID(Context context, Arguments arguments) {
+		return new Object[]{tablets.get(arguments.checkInteger(0)).toString()};
+	}
+	
+	@Callback
+	public Object[] disconnect(Context context, Arguments arguments) {
+		invalidate();
 		return null;
 	}
-
+	
 	@Override
-	public String getType() {return "TabletTransciever";
+	public String getComponentName() {return "TabletTransciever";
 	}
 
-	@Override
-	public void attach(IComputerAccess computer) {}
-
-	@Override
-	public void detach(IComputerAccess computer) {}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		if(other.getType() == getType()){return true;}
+	/* @Override
+	public boolean equals(SimpleComponent other) {
+		if(other.getComponentName() == getComponentName()){return true;}
 		else return false;
-	}
-
+	} */
 }

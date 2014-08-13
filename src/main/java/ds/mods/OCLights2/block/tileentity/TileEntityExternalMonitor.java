@@ -2,6 +2,10 @@ package ds.mods.OCLights2.block.tileentity;
 
 import java.awt.Color;
 
+import li.cil.oc.api.network.Arguments;
+import li.cil.oc.api.network.Callback;
+import li.cil.oc.api.network.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -10,14 +14,11 @@ import net.minecraft.util.AxisAlignedBB;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLLog;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.network.PacketSenders;
 
-public class TileEntityExternalMonitor extends TileEntityMonitor implements IPeripheral {
+public class TileEntityExternalMonitor extends TileEntityMonitor implements SimpleComponent {
 	public static final int MAX_WIDTH = 16;
 	public static final int MAX_HEIGHT = 9;
 	public static final int TICKS_TIL_SYNC = 20 * 600;
@@ -35,7 +36,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 	public Monitor m_originMonitor;
 
 	public TileEntityExternalMonitor() {
-		mon = new Monitor(32, 32,getMonitorObject());
+		mon = new Monitor(32, 32, getMonitorObject());
 		mon.tex.fill(Color.black);
 	}
 
@@ -117,7 +118,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 		if (origin() == null) return;
 		Monitor originTerminal = origin().mon;
 		originTerminal.removeAllGPUs();
-		originTerminal = new Monitor(m_width * 32, m_height * 32,getMonitorObject());
+		originTerminal = new Monitor(m_width * 32, m_height * 32, getMonitorObject());
 		origin().mon = originTerminal;
 		for (int y = 0; y < this.m_height; y++) {
 			for (int x = 0; x < this.m_width; x++) {
@@ -381,7 +382,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 				below.expand();
 			}
 			mon.removeAllGPUs();
-			mon = new Monitor(32, 32,getMonitorObject());
+			mon = new Monitor(32, 32, getMonitorObject());
 			return;
 		}
 
@@ -460,43 +461,27 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 		propogateTerminal();
 	}
 
-	@Override
-	public String[] getMethodNames() {
-		return new String[]{"getResolution","getDPM","getBlockResolution"};
+	@Callback
+	public Object[] getResolution(Context context, Arguments arguments) {
+		return new Object[]{mon.getWidth(),mon.getHeight()};
 	}
 
-	@Override
-	public Object[] callMethod(IComputerAccess computer,ILuaContext context, int method,Object[] arguments) throws Exception {
-		switch (method)
-		{
-		case 0:
-		{
-			return new Object[]{mon.getWidth(),mon.getHeight()};
-		}
-		case 1:
-		{
-			return new Object[]{32};
-		}
-		case 2:
-		{
-			return new Object[]{m_width,m_height};
-		}
-		}
-		return null;
+	@Callback
+	public Object[] getDPM(Context context, Arguments arguments) {
+		return new Object[]{32};
 	}
-
+	
+	@Callback
+	public Object[] getBlockResolution(Context context, Arguments arguments) {
+		return new Object[]{m_width,m_height};
+	}
+	
 	@Override
-	public String getType() {return "Monitor";}
+	public String getComponentName() {return "Monitor";}
 
-	@Override
-	public void attach(IComputerAccess computer) {}
-
-	@Override
-	public void detach(IComputerAccess computer) {}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		if(other.getType() == getType()){return true;}
+	/* @Override
+	public boolean equals(SimpleComponent other) {
+		if(other.getComponentName() == getComponentName()){return true;}
 		else return false;
-	}
+	} */
 }

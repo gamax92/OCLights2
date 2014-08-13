@@ -3,8 +3,6 @@ package ds.mods.OCLights2.block.tileentity;
 import java.awt.Color;
 
 import net.minecraft.tileentity.TileEntity;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.ILuaObject;
 import ds.mods.OCLights2.gpu.GPU;
 import ds.mods.OCLights2.gpu.Monitor;
 

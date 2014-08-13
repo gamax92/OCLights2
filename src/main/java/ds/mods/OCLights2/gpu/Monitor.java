@@ -3,7 +3,6 @@ package ds.mods.OCLights2.gpu;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import dan200.computercraft.api.lua.ILuaObject;
 import ds.mods.OCLights2.OCLights2;
 
 public class Monitor {
