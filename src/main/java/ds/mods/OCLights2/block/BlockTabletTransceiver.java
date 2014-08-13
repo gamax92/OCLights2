@@ -11,7 +11,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityTTrans;
 
 public class BlockTabletTransceiver extends Block {
@@ -20,7 +20,7 @@ public class BlockTabletTransceiver extends Block {
 	public BlockTabletTransceiver(int par1, Material par2Material) {
 		super(par1, par2Material);
 		this.setUnlocalizedName("monitor.tablet");
-		this.setCreativeTab(CCLights2.ccltab);
+		this.setCreativeTab(OCLights2.ocltab);
 		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
 	}
 	
@@ -64,8 +64,8 @@ public class BlockTabletTransceiver extends Block {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister) {
-		this.blockIcon = par1IconRegister.registerIcon("cclights:tabletTfront");
-	    sides = par1IconRegister.registerIcon("cclights:tabletTsides");
+		this.blockIcon = par1IconRegister.registerIcon("oclights:tabletTfront");
+	    sides = par1IconRegister.registerIcon("oclights:tabletTsides");
 	}
 
 	@Override

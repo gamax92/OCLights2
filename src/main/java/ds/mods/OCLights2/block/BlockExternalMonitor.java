@@ -11,7 +11,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.Player;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.CommonProxy;
 import ds.mods.OCLights2.block.tileentity.TileEntityExternalMonitor;
 import ds.mods.OCLights2.gpu.GPU;
@@ -20,7 +20,7 @@ public class BlockExternalMonitor extends Block {
 	public BlockExternalMonitor(int par1, Material par2Material) {
 		super(par1, par2Material);
 		this.setUnlocalizedName("monitor.big");
-		this.setCreativeTab(CCLights2.ccltab);
+		this.setCreativeTab(OCLights2.ocltab);
 		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
 	}
 	
@@ -158,6 +158,6 @@ public class BlockExternalMonitor extends Block {
 	
 	 @Override
 	  public void registerIcons(IconRegister iconRegister) {
-	      blockIcon = iconRegister.registerIcon("cclights:monitorsides");
+	      blockIcon = iconRegister.registerIcon("oclights:monitorsides");
 	  }
 }

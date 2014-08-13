@@ -11,7 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import net.minecraft.util.ChatAllowedCharacters;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.jhlabs.image.BoxBlurFilter;
 
 
@@ -86,7 +86,7 @@ public class Texture {
 		if (font == null)
 		{
 			try {
-			font = ImageIO.read(CCLights2.class.getResourceAsStream("/assets/cclights/textures/gui/ascii.png"));
+			font = ImageIO.read(OCLights2.class.getResourceAsStream("/assets/oclights/textures/gui/ascii.png"));
 			temp = new Texture(512, 512);
 			int i = font.getWidth();
 	        int j = font.getHeight();
@@ -141,7 +141,7 @@ public class Texture {
 	            }
 	        }	
 	        } catch (IOException e) {
-				CCLights2.debug("failed to load typeface for cclights2 ;_; did you mess with the files?");
+				OCLights2.debug("failed to load typeface for oclights2 ;_; did you mess with the files?");
 			}
 		}
 			
@@ -254,7 +254,7 @@ public class Texture {
 	{
 		if (tex == null)
 		{
-			CCLights2.debug("Texture to draw is null.");
+			OCLights2.debug("Texture to draw is null.");
 			return;
 		}
 		drawTexture(tex,x,y,0,0,tex.width,tex.height, c);
@@ -275,7 +275,7 @@ public class Texture {
 	{
 		if (tex == null)
 		{
-			CCLights2.debug("Texture to draw is null.");
+			OCLights2.debug("Texture to draw is null.");
 			return;
 		}
 		graphics.setTransform(transform);
@@ -475,7 +475,7 @@ public class Texture {
 	 */
 	@Override
 	protected void finalize() throws Throwable {
-		CCLights2.debug("Texture is being discarded...");
+		OCLights2.debug("Texture is being discarded...");
 		dispose();
 	}
 

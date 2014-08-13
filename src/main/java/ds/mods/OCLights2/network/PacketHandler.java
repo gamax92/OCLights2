@@ -27,7 +27,7 @@ import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.ClientDrawThread;
 import ds.mods.OCLights2.Config;
 import ds.mods.OCLights2.block.tileentity.TileEntityAdvancedlight;
@@ -271,11 +271,11 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 						try {
 							tile.gpu.processCommand(cmd);
 						} catch (Exception e) {
-							CCLights2.debug("failed to process command in clientsidedrawlist");
+							OCLights2.debug("failed to process command in clientsidedrawlist");
 						}
 					else {
 						if (!thread.isAlive()) {
-							CCLights2.debug("The client draw thread died, restarting");
+							OCLights2.debug("The client draw thread died, restarting");
 							thread = new ClientDrawThread();
 							thread.start();
 						}
@@ -388,11 +388,11 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 	{
 		if(Minecraft.getMinecraft().isSingleplayer())
 		{
-			CCLights2.debug("Singleplayer detected, sync not needed");
+			OCLights2.debug("Singleplayer detected, sync not needed");
 		}
 		else{
 			Config.setDefaults();
-			CCLights2.debug("PREP'd for SYNC");
+			OCLights2.debug("PREP'd for SYNC");
 		}
 	}
 

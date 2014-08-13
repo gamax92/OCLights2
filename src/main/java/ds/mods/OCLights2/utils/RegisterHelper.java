@@ -2,7 +2,7 @@ package ds.mods.OCLights2.utils;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 
 public class RegisterHelper {
 	
@@ -12,7 +12,7 @@ public class RegisterHelper {
 				return true;
 			}
 		}
-		CCLights2.debug("sawwy, itemid " + itemid + " was disabld, name was " + name);
+		OCLights2.debug("sawwy, itemid " + itemid + " was disabld, name was " + name);
 		return false;
 	}
 
@@ -22,7 +22,7 @@ public class RegisterHelper {
 				return true;
 			}
 		}
-		CCLights2.debug("sawwy, blockid " + blockId + " was disabld, name was " + name);
+		OCLights2.debug("sawwy, blockid " + blockId + " was disabld, name was " + name);
 		return false;
 	}
 }

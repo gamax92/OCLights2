@@ -9,14 +9,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 
 public class ItemRAM extends Item {
 	public ItemRAM(int par1) {
 		super(par1);
 		this.hasSubtypes = true;
 		this.setUnlocalizedName("ram");
-		this.setCreativeTab(CCLights2.ccltab);
+		this.setCreativeTab(OCLights2.ocltab);
 	}
 	
 	@Override
@@ -41,7 +41,7 @@ public class ItemRAM extends Item {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon("cclights:ram");
+        this.itemIcon = par1IconRegister.registerIcon("oclights:ram");
     }
 
 }

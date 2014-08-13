@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import dan200.computercraft.api.lua.ILuaObject;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 
 public class Monitor {
 	public ArrayList<GPU> gpu = new ArrayList<GPU>();
@@ -41,7 +41,7 @@ public class Monitor {
 		tex.rgbCache = new int[16*32*9*32];
 		tex.fill(Color.black);
 		tex.texUpdate();
-		CCLights2.debug("Resized to: "+w+","+h);
+		OCLights2.debug("Resized to: "+w+","+h);
 	}
 	
 	/**

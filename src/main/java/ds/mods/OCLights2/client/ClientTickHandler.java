@@ -40,7 +40,7 @@ public class ClientTickHandler implements ITickHandler {
 
 	@Override
 	public String getLabel() {
-		return "CCLights2 Render Tick Tracker";
+		return "OCLights2 Render Tick Tracker";
 	}
     
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) {}

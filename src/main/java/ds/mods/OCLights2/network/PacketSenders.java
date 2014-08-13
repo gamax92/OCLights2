@@ -25,7 +25,7 @@ import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityGPU;
 import ds.mods.OCLights2.block.tileentity.TileEntityMonitor;
 import ds.mods.OCLights2.block.tileentity.TileEntityTTrans;
@@ -72,7 +72,7 @@ public final class PacketSenders {
 		}
 		try {
 			Packet[] packets = PacketChunker.instance.createPackets(
-					"CCLights2", outputStream.toByteArray());
+					"OCLights2", outputStream.toByteArray());
 
 			for (int g = 0; g < packets.length; g++) {
 				PacketDispatcher.sendPacketToAllAround(tile.xCoord,
@@ -125,7 +125,7 @@ public final class PacketSenders {
 				writeMatrix(out, matrix);
 			}
 			Packet[] packets = PacketChunker.instance.createPackets(
-					"CCLights2", out.toByteArray());
+					"OCLights2", out.toByteArray());
 			for (int g = 0; g < packets.length; g++) {
 				PacketDispatcher.sendPacketToPlayer(packets[g], player);
 			}
@@ -154,7 +154,7 @@ public final class PacketSenders {
 				outputStream.writeInt(arr[i]);
 			}
 			Packet[] packets = PacketChunker.instance.createPackets(
-					"CCLights2", outputStream.toByteArray());
+					"OCLights2", outputStream.toByteArray());
 			for (int g = 0; g < packets.length; g++) {
 				PacketDispatcher.sendPacketToPlayer(packets[g], whom);
 			}
@@ -225,12 +225,12 @@ public final class PacketSenders {
 			outputStream.writeInt(screenshotArray.length);
 			outputStream.write(screenshotArray);
 
-			Packet[] packets = PacketChunker.instance.createPackets("CCLights2", outputStream.toByteArray());
+			Packet[] packets = PacketChunker.instance.createPackets("OCLights2", outputStream.toByteArray());
 			for (int g = 0; g < packets.length; g++) {
 				PacketDispatcher.sendPacketToServer(packets[g]);
 			}
 		} catch (IOException e1) {
-			CCLights2.debug("failed to send screenshot packets");
+			OCLights2.debug("failed to send screenshot packets");
 		}
 	}
 
@@ -280,7 +280,7 @@ public final class PacketSenders {
 		outputStream.writeInt(m_yIndex);
 		outputStream.writeInt(m_dir);
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "CCLights2";
+		packet.channel = "OCLights2";
 		packet.data = outputStream.toByteArray();
 		packet.length = packet.data.length;
 		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 4096.0D,
@@ -298,7 +298,7 @@ public final class PacketSenders {
 
 	public static void createPacketAndSend(ByteArrayDataOutput mergeStream) {
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "CCLights2";
+		packet.channel = "OCLights2";
 		packet.data = mergeStream.toByteArray();
 		packet.length = packet.data.length;
 		PacketDispatcher.sendPacketToServer(packet);
@@ -310,7 +310,7 @@ public final class PacketSenders {
 		outputStream.writeShort(monitorWidth);
 		outputStream.writeShort(monitorHeight);
 		Packet250CustomPayload packet = new Packet250CustomPayload();
-		packet.channel = "CCLights2";
+		packet.channel = "OCLights2";
 		packet.data = outputStream.toByteArray();
 		packet.length = packet.data.length;
 		PacketDispatcher.sendPacketToPlayer(packet, player);

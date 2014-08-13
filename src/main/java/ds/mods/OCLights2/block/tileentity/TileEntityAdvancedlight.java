@@ -76,7 +76,7 @@ public class TileEntityAdvancedlight  extends TileEntity implements IPeripheral 
 	    		outputStream.writeFloat(this.r);
 	    		outputStream.writeFloat(this.g);
 	    		outputStream.writeFloat(this.b);
-	    	Packet[] packets = PacketChunker.instance.createPackets("CCLights2", outputStream.toByteArray());
+	    	Packet[] packets = PacketChunker.instance.createPackets("OCLights2", outputStream.toByteArray());
 	    	PacketDispatcher.sendPacketToAllPlayers(packets[0]);
 	    	} catch (IOException ex) {
 	    		ex.printStackTrace();

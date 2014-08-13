@@ -43,7 +43,7 @@ public class ClientDrawThread extends Thread {
 												if (d == null) continue;
 												gpu.processCommand(d);
 											} catch (Exception e1) {
-												CCLights2.debug("Unable to process cmd in clientdrawthread");
+												OCLights2.debug("Unable to process cmd in clientdrawthread");
 											}
 										}
 										gpu.currentMonitor.tex.texUpdate();
@@ -61,7 +61,7 @@ public class ClientDrawThread extends Thread {
 			try {
 				Thread.sleep(1L);
 			} catch (InterruptedException e) {
-				CCLights2.debug("ClientDrawThread is unable to sleep.");
+				OCLights2.debug("ClientDrawThread is unable to sleep.");
 			}
 		}
 	}

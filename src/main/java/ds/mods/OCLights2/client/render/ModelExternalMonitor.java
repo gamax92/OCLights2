@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 public class ModelExternalMonitor extends ModelBase
 {
   ModelRenderer Monitor;
-  private static final ResourceLocation MonitorTextures = new ResourceLocation("cclights","textures/blocks/ExternalMonitor.png");
+  private static final ResourceLocation MonitorTextures = new ResourceLocation("oclights","textures/blocks/ExternalMonitor.png");
   
   public ModelExternalMonitor()
   {

@@ -17,7 +17,7 @@ import ds.mods.OCLights2.network.PacketSenders;
 
 //DONE: Don't fire events when mouse is outside area, and apply correct offsets.
 public class GuiMonitor extends GuiScreen {
-	//private static final ResourceLocation corners = new ResourceLocation("cclights", "textures/gui/corners.png");
+	//private static final ResourceLocation corners = new ResourceLocation("oclights", "textures/gui/corners.png");
 	public Monitor mon;
 	public TileEntityMonitor tile;
 	public boolean isMouseDown = false;

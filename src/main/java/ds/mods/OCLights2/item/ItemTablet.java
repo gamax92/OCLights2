@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityTTrans;
 import ds.mods.OCLights2.client.ClientTickHandler;
 import ds.mods.OCLights2.client.render.TabletRenderer;
@@ -25,7 +25,7 @@ public class ItemTablet extends Item {
 		this.setMaxStackSize(1);
 		this.setNoRepair();
 		this.setUnlocalizedName("tablet");
-		this.setCreativeTab(CCLights2.ccltab);
+		this.setCreativeTab(OCLights2.ocltab);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class ItemTablet extends Item {
 			}
 		}
 		else{
-			Player.openGui(CCLights2.instance, 1, par3World, 0, 0, 0);
+			Player.openGui(OCLights2.instance, 1, par3World, 0, 0, 0);
 		}
 		return par1ItemStack;
 	}
@@ -60,7 +60,7 @@ public class ItemTablet extends Item {
 			int par6, int par7, float par8, float par9, float par10) {
 		NBTTagCompound nbt = getNBT(par1ItemStack,par3World);
 		
-		if (!par3World.isRemote && CCLights2.ttrans.blockID == par3World.getBlockId(par4, par5, par6))
+		if (!par3World.isRemote && OCLights2.ttrans.blockID == par3World.getBlockId(par4, par5, par6))
 		{
 			nbt.setBoolean("canDisplay",true);
 			TileEntityTTrans tile = (TileEntityTTrans) par3World.getBlockTileEntity(par4, par5, par6);

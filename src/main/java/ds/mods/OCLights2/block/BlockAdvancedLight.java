@@ -6,7 +6,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.CommonProxy;
 import ds.mods.OCLights2.block.tileentity.TileEntityAdvancedlight;
 
@@ -17,7 +17,7 @@ public class BlockAdvancedLight extends BlockContainer
         super(i, j);
         this.setLightValue(1.0F);
         this.setUnlocalizedName("Advanced.Light");
-		this.setCreativeTab(CCLights2.ccltab);
+		this.setCreativeTab(OCLights2.ocltab);
 		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
     }
     

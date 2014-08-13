@@ -13,7 +13,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityGPU;
 import ds.mods.OCLights2.item.ItemRAM;
 
@@ -22,7 +22,7 @@ public class BlockGPU extends Block{
 	public BlockGPU(int par1, Material par2Material) {
 		super(par1, par2Material);
 		this.setUnlocalizedName("gpu");
-		this.setCreativeTab(CCLights2.ccltab);
+		this.setCreativeTab(OCLights2.ocltab);
 		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
 	}
 
@@ -80,7 +80,7 @@ public class BlockGPU extends Block{
 							par2 + 0.5,
 							par3 + 0.5,
 							par4 + 0.5, new ItemStack(
-									CCLights2.ram, stacksize, i));
+									OCLights2.ram, stacksize, i));
 					float var15 = 0.05F;
 					var14.motionX = (float) rand.nextGaussian() * var15;
 					var14.motionY = (float) rand.nextGaussian()
@@ -107,8 +107,8 @@ public class BlockGPU extends Block{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister) {
-		this.blockIcon = par1IconRegister.registerIcon("cclights:gpufront");
-		sides = par1IconRegister.registerIcon("cclights:gpusides");
+		this.blockIcon = par1IconRegister.registerIcon("oclights:gpufront");
+		sides = par1IconRegister.registerIcon("oclights:gpusides");
 	}
 
 }

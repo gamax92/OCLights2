@@ -12,7 +12,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityMonitor;
 
 public class BlockMonitor extends Block {
@@ -21,7 +21,7 @@ public class BlockMonitor extends Block {
 	public BlockMonitor(int par1, Material par2Material) {
 		super(par1, par2Material);
 		this.setUnlocalizedName("monitor.normal");
-		this.setCreativeTab(CCLights2.ccltab);
+		this.setCreativeTab(OCLights2.ocltab);
 		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
 	}
 
@@ -62,8 +62,8 @@ public class BlockMonitor extends Block {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister) {
-		this.blockIcon = par1IconRegister.registerIcon("cclights:monitorfront");
-		sides = par1IconRegister.registerIcon("cclights:monitorsides");
+		this.blockIcon = par1IconRegister.registerIcon("oclights:monitorfront");
+		sides = par1IconRegister.registerIcon("oclights:monitorsides");
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class BlockMonitor extends Block {
 		if (tileEntity == null || player.isSneaking()) {
 			return false;
 		}
-		player.openGui(CCLights2.instance, 0, world, x, y, z);
+		player.openGui(OCLights2.instance, 0, world, x, y, z);
 		return true;
 	}
 }

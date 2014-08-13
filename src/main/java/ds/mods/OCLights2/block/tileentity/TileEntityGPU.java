@@ -34,7 +34,7 @@ import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.CommandEnum;
 import ds.mods.OCLights2.converter.ConvertDouble;
 import ds.mods.OCLights2.converter.ConvertInteger;
@@ -401,7 +401,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			else if (args.length == 1 && args[0] instanceof String)
 			{
 				String file = (String)args[0];
-				File f = new File(CCLights2.proxy.getWorldDir(worldObj),"computer/"+computer.getID()+"/"+file);
+				File f = new File(OCLights2.proxy.getWorldDir(worldObj),"computer/"+computer.getID()+"/"+file);
 				FileInputStream in = new FileInputStream(f);
 				byte[] b = new byte[(int)in.getChannel().size()];
 				in.read(b);
@@ -421,7 +421,7 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 			Object[] ret = {id,tex.getWidth(),tex.getHeight()};
 			gpu.drawlist.push(cmd);
 			double b = System.currentTimeMillis();
-			CCLights2.debug("Import time: "+(b-a)+"ms");
+			OCLights2.debug("Import time: "+(b-a)+"ms");
 			return ret;
 		}
 		case Export:
@@ -682,8 +682,8 @@ public class TileEntityGPU extends TileEntity implements IPeripheral {
 	@Override
 	public void attach(IComputerAccess computer) {
 		comp.add(computer);
-		computer.mount("cclights2", new IMount(){
-			private static final String RESOURCE_PATH = "/assets/cclights/lua/";
+		computer.mount("oclights2", new IMount(){
+			private static final String RESOURCE_PATH = "/assets/oclights/lua/";
 			private final SortedSet<String> files;
 
 			{

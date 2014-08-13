@@ -1,15 +1,16 @@
 [
 {
-  "modid" : "CCLights2",
-  "name" : "CCLights 2",
-  "version" : "0.4.1-x",
+  "modid" : "OCLights2",
+  "name" : "OCLights 2",
+  "version" : "0.4.1.x",
   "url" : "ds84182.no-ip.info",
   "credits" : "Visit the github repo!",
   "authors": [
     "ds84182",
-    "Alekso56"
+    "Alekso56",
+    "gamax92"
   ],
-  "description": "CCLights 2 adds very advanced monitors and tablets to minecraft.",
-  "logoFile" : "mods/CCLights2/textures/items/ram.png"
+  "description": "OCLights 2 adds very advanced monitors and tablets to minecraft.",
+  "logoFile" : "assets/OCLights2/textures/items/ram.png"
 }
 ]

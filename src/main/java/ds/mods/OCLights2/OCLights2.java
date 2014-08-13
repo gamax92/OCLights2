@@ -17,20 +17,20 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import ds.mods.OCLights2.network.PacketHandler;
 
-@Mod(modid = "CCLights2", name = "CCLights2", version = "0.4.1-75",dependencies="required-after:ComputerCraft@[1.6,)",acceptedMinecraftVersions = "1.6.4")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = { "CCLights2" },packetHandler = PacketHandler.class,connectionHandler = PacketHandler.class)
-public class CCLights2 {
-	@Mod.Instance("CCLights2")
-	public static CCLights2 instance;
+@Mod(modid = "OCLights2", name = "OCLights2", version = "0.4.1-75",dependencies="required-after:OpenComponents",acceptedMinecraftVersions = "1.6.4")
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = { "OCLights2" },packetHandler = PacketHandler.class,connectionHandler = PacketHandler.class)
+public class OCLights2 {
+	@Mod.Instance("OCLights2")
+	public static OCLights2 instance;
 	
-	@SidedProxy(serverSide = "ds.mods.CCLights2.CommonProxy", clientSide = "ds.mods.CCLights2.client.ClientProxy")
+	@SidedProxy(serverSide = "ds.mods.OCLights2.CommonProxy", clientSide = "ds.mods.OCLights2.client.ClientProxy")
 	public static CommonProxy proxy;
 	
 	public static Block gpu,monitor,monitorBig,light,advancedlight,ttrans;
 	public static Item ram,tablet;
 	public static Logger logger;
 	
-	public static CreativeTabs ccltab = new CreativeTabs("CCLights2") {
+	public static CreativeTabs ocltab = new CreativeTabs("OCLights2") {
 		@Override
 		public ItemStack getIconItemStack() {
 			this.getTranslatedTabLabel();

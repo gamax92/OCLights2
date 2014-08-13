@@ -33,11 +33,11 @@ public class Config {
 			monitorSize = new Integer[] { Integer.decode(mParser[0]),Integer.decode(mParser[1]) };
 			if (monitorSize[0] < 1 || monitorSize[1] < 1) {
 				setDefaults();
-				CCLights2.logger.log(Level.WARNING,"Invalid monitor/externalmonitor size found, using defaults");
+				OCLights2.logger.log(Level.WARNING,"Invalid monitor/externalmonitor size found, using defaults");
 			} 
 		}else {
 			setDefaults();
-			CCLights2.logger.log(Level.WARNING,"Invalid monitor/externalmonitor size found, using defaults");
+			OCLights2.logger.log(Level.WARNING,"Invalid monitor/externalmonitor size found, using defaults");
 		}
 	}
 	

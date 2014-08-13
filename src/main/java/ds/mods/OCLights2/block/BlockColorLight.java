@@ -10,7 +10,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityColorLight;
 
 public class BlockColorLight extends BlockContainer {
@@ -20,7 +20,7 @@ public class BlockColorLight extends BlockContainer {
 		this.setUnlocalizedName("Light");
 		this.setLightValue(1.0F);
 		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
-		this.setCreativeTab(CCLights2.ccltab);
+		this.setCreativeTab(OCLights2.ocltab);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class BlockColorLight extends BlockContainer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister) {
-       par1IconRegister.registerIcon("CCLights:light");
+       par1IconRegister.registerIcon("OCLights:light");
 	}
 	@Override
 	public int quantityDropped(Random random)

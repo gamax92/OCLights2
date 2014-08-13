@@ -19,7 +19,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityTTrans;
 import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.item.ItemTablet;
@@ -29,7 +29,7 @@ public class TabletRenderer implements IItemRenderer {
 	
 	ModelTablet model = new ModelTablet();
 	TextureManager re;
-	ResourceLocation texture = new ResourceLocation("cclights", "textures/items/Tablet.png");
+	ResourceLocation texture = new ResourceLocation("oclights", "textures/items/Tablet.png");
 	public static Texture defaultTexture = new Texture(16*32, 9*32);
 	public static Texture errorTexture = new Texture(16*32, 9*32);
 	public static DynamicTexture dyntex = new DynamicTexture(16*32,9*32);
@@ -111,7 +111,7 @@ public class TabletRenderer implements IItemRenderer {
 		}
 		{
 			model.draw();
-			NBTTagCompound nbt = ((ItemTablet)CCLights2.tablet).getNBT(item, Minecraft.getMinecraft().theWorld);
+			NBTTagCompound nbt = ((ItemTablet)OCLights2.tablet).getNBT(item, Minecraft.getMinecraft().theWorld);
 			if (nbt == null)
 			{
 				GL11.glPopMatrix();

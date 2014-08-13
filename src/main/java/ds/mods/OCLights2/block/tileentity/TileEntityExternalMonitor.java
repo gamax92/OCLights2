@@ -13,7 +13,7 @@ import cpw.mods.fml.common.FMLLog;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import ds.mods.OCLights2.CCLights2;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.network.PacketSenders;
 
@@ -55,7 +55,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		if ((getXIndex() != 0) || (getYIndex() != 0)) {
-			return CCLights2.monitorBig.getCollisionBoundingBoxFromPool(
+			return OCLights2.monitorBig.getCollisionBoundingBoxFromPool(
 					this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 		}
 
@@ -74,7 +74,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements IPer
 					maxY, maxZ);
 		}
 
-		return CCLights2.monitorBig.getCollisionBoundingBoxFromPool(
+		return OCLights2.monitorBig.getCollisionBoundingBoxFromPool(
 				this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 	}
 
