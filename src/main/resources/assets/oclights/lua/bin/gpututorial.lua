@@ -1,13 +1,11 @@
-for i, v in pairs(peripheral.getNames()) do
-	if peripheral.getType(v) == "GPU" then
-		gpu = peripheral.wrap(v) -- So can't wait for peripheral.find
-		break
-	end
-end
+local component = require("component")
+local event = require("event")
 
-if not gpu then
+if not component.isAvailable("ocl_gpu") then
 	error("Could not find a GPU connected to the computer!",0)
 end
+
+local gpu = component.ocl_gpu
 
 local sectex
 
@@ -19,7 +17,7 @@ function fadeDouble(v,x,y,r,g,b)
 	for i=1,16 do
 		gpu.setColor(r,g,b,32)
 		gpu.drawText(v,x,y)
-		sleep(0)
+		os.sleep(0)
 	end
 	gpu.setColor(r,g,b)
 	gpu.drawText(v,x,y)
@@ -32,7 +30,7 @@ function fade(v,x,y,r,g,b)
 	for i=1,4 do
 		gpu.setColor(r,g,b,64)
 		gpu.drawText(v,x,y)
-		sleep(0)
+		os.sleep(0)
 	end
 	gpu.setColor(r,g,b)
 	gpu.drawText(v,x,y)
@@ -53,7 +51,7 @@ function fadeScreen()
 	for i=0,255,16 do
 		gpu.setColor(255,255,255,i)
 		gpu.filledRectangle(0,0,gpu.getSize(0))
-		sleep(0)
+		os.sleep(0)
 	end
 	gpu.setColor(255,255,255)
 	gpu.fill()
@@ -67,14 +65,14 @@ local examples = {
 		fade("gpu.setColor(128,128,255)",0,8)
 		fade("gpu.fill()",0,16)
 		fade("Click to continue",0,24)
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		
 		gpu.setColor(128,128,255)
 		gpu.fill()
 		
 		fade "The screen is filled"
 		fade("Click to continue",0,8)
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 	end
 	},
@@ -86,7 +84,7 @@ local examples = {
 		gpu.rectangle(25,25,50,50)
 		
 		fade("Click to continue",0,16)
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 		
 		fade "Filled Rectangles:"
@@ -95,7 +93,7 @@ local examples = {
 		gpu.filledRectangle(25,25,50,50)
 		
 		fade("Click to continue",0,16)
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 	end},
 	{"Textures",
@@ -106,7 +104,7 @@ local examples = {
 		fadeNext("The above method will return a number")
 		fadeNext("That number is the texture id")
 		fadeNext("Click to continue")
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 		
 		fadeNext("Also, textures come with a cost")
@@ -117,7 +115,7 @@ local examples = {
 		fadeNext("gpu.getFreeMemory()")
 		fadeNext("gpu.getTotalMemory()")
 		fadeNext("Click to continue")
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 		
 		fadeNext("Because OCLights2 has limited texture memory,")
@@ -125,18 +123,18 @@ local examples = {
 		fadeNext("gpu.freeTexture(id)")
 		fadeNext("Given an id, the above will free that texture")
 		fadeNext("Click to continue")
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 		
 		fadeNext("In OCLights2, the screen texture has an id of 0")
 		fadeNext("You can use the screen like a texture")
 		fadeNext("gpu.drawTexture(0,64,64)")
-		sleep(0.5)
+		os.sleep(0.5)
 		gpu.setColor(255,255,255)
 		gpu.drawTexture(0,64,64)
 		fadeNext("Now the screen is onscreen!")
 		fadeNext("Click to continue")
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 		
 		fadeNext("Textures in OCLights2 are framebuffers")
@@ -144,7 +142,7 @@ local examples = {
 		fadeNext("gpu.bindTexture(id) allows you to do that")
 		fadeNext("gpu.bindTexture(0) will draw to the screen")
 		fadeNext("Click to continue")
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 		
 		fadeNext("Example Code:")
@@ -171,7 +169,7 @@ local examples = {
 		gpu.freeTexture(tex)
 		
 		fadeNext("Click to continue")
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 		
 		fadeNext("That example did the following:")
@@ -185,15 +183,15 @@ local examples = {
 		fadeNext("Draw the texture at 128,128")
 		fadeNext("Free the memory allocated for the texture")
 		fadeNext("Click to continue")
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 	end},
 	{"Importing Images",
 	function()
-		local lp = fs.combine(shell.getRunningProgram(),"..")
-		fs.copy(fs.combine(lp,"tutorialFiles/smile.png"),"temp.png")
-		local t = gpu.import("temp.png")
-		fs.delete("temp.png")
+		local file = io.open("/usr/misc/smile.png","rb")
+		local data = file:read("*a")
+		file:close()
+		local t = gpu.import(data)
 		fade("Importing images:")
 		fade("local texture = gpu.import(\"smile.png\")",0,8)
 		fade("gpu.drawTexture(texture,64,64)",0,16)
@@ -202,7 +200,7 @@ local examples = {
 		gpu.drawTexture(t,64,64)
 		gpu.freeTexture(t)
 		fade("Click to continue",0,32)
-		os.pullEvent("monitor_up")
+		event.pull("monitor_up")
 		fadeScreen()
 	end}
 }
@@ -211,7 +209,7 @@ function runExample(i)
 	fadeDouble("Example "..i)
 	fade(examples[i][1],0,16)
 	fade("Click to continue",0,24)
-	os.pullEvent("monitor_up")
+	event.pull("monitor_up")
 	fadeScreen()
 	
 	examples[i][2]()
@@ -229,17 +227,17 @@ function askQuit()
 		gpu.drawTexture(sectex,0,0)
 		gpu.setColor(0,0,0,math.floor(i/4))
 		gpu.filledRectangle(0,0,gpu.getSize(0))
-		sleep(0)
+		os.sleep(0)
 	end
 	
 	fadeDouble("Bye!",0,0,255,255,255)
 	fade("Click to continue",0,16)
-	os.pullEvent("monitor_up")
+	event.pull("monitor_up")
 	
 	for i=0,255,16 do
 		gpu.setColor(0,0,0,i)
 		gpu.filledRectangle(0,0,gpu.getSize(0))
-		sleep(0)
+		os.sleep(0)
 	end
 end
 
@@ -248,11 +246,11 @@ local s,e = pcall(function()
 	sectex = gpu.createTexture(w,h)
 	local q = false
 	
-	parallel.waitForAny(function()
+	--parallel.waitForAny(function()
 		for i=0,255,16 do
 			gpu.setColor(i,i,i)
 			gpu.fill()
-			sleep(0)
+			os.sleep(0)
 		end
 		gpu.setColor(255,255,255)
 		gpu.fill()
@@ -264,7 +262,7 @@ local s,e = pcall(function()
 		gpu.setColor(255,0,0)
 		gpu.filledRectangle(w-4,h-4,4,4)
 		
-		local _,b,x,y = os.pullEvent("monitor_up")
+		local _,b,x,y = event.pull("monitor_up")
 		
 		if x>=0 and x<=gpu.getTextWidth(exm) and y>=24 and y<=32 then
 			fadeScreen()
@@ -311,11 +309,11 @@ local s,e = pcall(function()
 				gpu.fill()
 				gpu.setColor(255,255,255,i)
 				gpu.drawTexture(sectex,0,0)
-				sleep(0)
+				os.sleep(0)
 			end
 			while true do
 				gpu.drawTexture(sectex,0,0)
-				local _,b,mx,my = os.pullEvent("monitor_up")
+				local _,b,mx,my = event.pull("monitor_up")
 				
 				local x = tw+1
 				local y = 1
@@ -330,7 +328,7 @@ local s,e = pcall(function()
 								gpu.fill()
 								gpu.setColor(255,255,255,i)
 								gpu.drawTexture(sectex,0,0)
-								sleep(0)
+								os.sleep(0)
 							end
 						end
 					end
@@ -345,19 +343,19 @@ local s,e = pcall(function()
 			
 			fade("You are finished with the OCLights2 tutorial!")
 			fade("Click to continue",0,8)
-			os.pullEvent("monitor_up")
+			event.pull("monitor_up")
 			fadeScreen()
 		end
-	end,function()
+	--[[ end,function()
 		while true do
-			local _,b,x,y = os.pullEvent("monitor_up")
+			local _,b,x,y = event.pull("monitor_up")
 		
 			if x>=w-4 and y>=h-4 then
 				q = true
 				return
 			end
 		end
-	end)
+	end) --]]
 	if q then askQuit() end
 end)
 
@@ -366,13 +364,13 @@ if not s then
 	if sectex then gpu.freeTexture(sectex) end
 	gpu.setColor(0,0,0)
 	gpu.fill()
-	sleep(0)
+	os.sleep(0)
 	gpu.setColor(255,255,255)
 	gpu.push()
 	gpu.scale(2,2)
 	gpu.drawText("Well, that was bad...",0,0)
 	gpu.pop()
-	sleep(0)
+	os.sleep(0)
 	gpu.drawText(e,0,16)
 	print(e)
 else

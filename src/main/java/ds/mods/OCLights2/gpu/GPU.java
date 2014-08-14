@@ -384,17 +384,10 @@ public class GPU {
 				}
 				case Import:
 				{
-					if (cmd.args[0] instanceof Object[])
-					{
-						Object[] old = (Object[]) cmd.args[0];
-						cmd.args[0] = new Byte[old.length];
-						Byte[] n = (Byte[]) cmd.args[0];
-						for (int i=0; i<old.length; i++)
-						{
-							n[i] = (Byte) old[i];
-						}
-					}
 					BufferedImage img = loadImage(ArrayUtils.toPrimitive((Byte[])cmd.args[0]));
+					if (img == null) {
+						throw new Exception("Failed to load image");
+					}
 					//image loaded successfully time to create texture
 					int id = newTexture(img.getWidth(),img.getHeight());
 					if (id == -1) {

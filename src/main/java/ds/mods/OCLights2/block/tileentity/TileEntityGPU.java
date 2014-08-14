@@ -4,16 +4,10 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.SortedSet;
 import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
@@ -22,38 +16,31 @@ import li.cil.oc.api.FileSystem;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Component;
-import li.cil.oc.api.network.ComponentConnector;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.google.common.collect.ImmutableSortedSet;
+import org.apache.commons.io.FileUtils;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
-import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.CommandEnum;
-import ds.mods.OCLights2.converter.ConvertDouble;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.converter.ConvertInteger;
-import ds.mods.OCLights2.converter.ConvertString;
 import ds.mods.OCLights2.gpu.DrawCMD;
 import ds.mods.OCLights2.gpu.GPU;
 import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.network.PacketSenders;
+import ds.mods.OCLights2.utils.Convert;
 
 public class TileEntityGPU extends TileEntity implements Environment {
 	public GPU gpu;
@@ -393,15 +380,19 @@ public class TileEntityGPU extends TileEntity implements Environment {
 				data[(int) i] = ((Double) m.get(i + 1D)).byteValue();
 			}
 		} else if (args.count() == 1 && args.isString(0)) {
-			String file = args.checkString(0);
-			File f = new File(OCLights2.proxy.getWorldDir(worldObj), "opencomputers" + File.separatorChar + context.node().address() + File.separatorChar + file);
-			FileInputStream in = new FileInputStream(f);
-			byte[] b = new byte[(int) in.getChannel().size()];
-			in.read(b);
-			in.close();
-			data = ArrayUtils.toObject(b);
+			data = Convert.toByte(args.checkByteArray(0));
+		} else if (args.count() == 2 && args.isString(0) && args.isString(1)) {
+			String address = args.checkString(0);
+			String path = args.checkString(1);
+			File cleanPath = new File("/",path);
+			File f = new File(OCLights2.proxy.getWorldDir(worldObj), "opencomputers" + File.separatorChar + address + File.separatorChar + cleanPath.getCanonicalPath());
+			if (!f.exists())
+				throw new Exception("No such file");
+			else if (f.isDirectory())
+				throw new Exception("Cannot import a directory");
+			data = Convert.toByte(FileUtils.readFileToByteArray(f));
 		} else {
-			throw new Exception("import: Argument Error: (filedata or filename)");
+			throw new Exception("import: Argument Error: (filedata or address, path) expected");
 		}
 		DrawCMD cmd = new DrawCMD();
 		Object[] nargs = new Object[] { data };
@@ -464,7 +455,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			for (int i = 0; i < str.length(); i++) {
 				nargs[2 + i] = str.charAt(i);
 			}
-			cmd.cmd = CommandEnum.DrawTexture;
+			cmd.cmd = CommandEnum.DrawText;
 			cmd.args = nargs;
 			Object[] ret = gpu.processCommand(cmd);
 			gpu.drawlist.push(cmd);

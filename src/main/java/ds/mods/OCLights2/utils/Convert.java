@@ -96,4 +96,12 @@ public class Convert {
 	{
 		return ((Double) var).intValue();
 	}
+	
+	public static Byte[] toByte(byte[] var)
+	{
+	    Byte[] bytes = new Byte[var.length];
+	    int i = 0;
+	    for (byte b : var) bytes[i++] = b;
+	    return bytes;
+	}
 }
