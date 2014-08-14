@@ -29,7 +29,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 	
 	public TileEntityTTrans()
 	{
-		mon = new Monitor(16*32,9*32); //,getMonitorObject());
+		mon = new Monitor(16*32,9*32,getMonitorObject());
 		mon.tex.fill(Color.black);
 		mon.tex.drawText("Tablet connected", 0, 0, Color.white);
 		mon.tex.texUpdate();

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import ds.mods.OCLights2.OCLights2;
+import ds.mods.OCLights2.block.tileentity.TileEntityMonitor.MonitorObject;
 
 public class Monitor {
 	public ArrayList<GPU> gpu = new ArrayList<GPU>();
@@ -11,13 +12,13 @@ public class Monitor {
 	
 	private int width;
 	private int height;
-	// public ILuaObject obj;
+	public MonitorObject obj;
 	
 	/**
 	 * Make a new Monitor.
 	 * @param width,height,ILuaObject
 	 */
-	public Monitor(int w, int h) //, ILuaObject o)
+	public Monitor(int w, int h, MonitorObject o)
 	{
 		width = w;
 		height = h;
@@ -25,7 +26,7 @@ public class Monitor {
 		tex.rgbCache = new int[16*32*9*32];
 		tex.fill(Color.black);
 		tex.texUpdate();
-		// obj = o;
+		obj = o;
 	}
 	
 	/**

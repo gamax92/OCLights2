@@ -598,8 +598,7 @@ public class TileEntityGPU extends TileEntityEnvironment {
 	@Callback
 	public Object[] getMonitor(Context context, Arguments args) {
 		//getMonitor
-		//return new Object[] { gpu.currentMonitor.obj };
-		return null;
+		return new Object[] { gpu.currentMonitor.obj };
 	}
 
 	@Callback

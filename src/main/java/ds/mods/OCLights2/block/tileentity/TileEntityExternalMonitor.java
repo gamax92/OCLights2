@@ -36,7 +36,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements Simp
 	public Monitor m_originMonitor;
 
 	public TileEntityExternalMonitor() {
-		mon = new Monitor(32, 32); //, getMonitorObject());
+		mon = new Monitor(32, 32, getMonitorObject());
 		mon.tex.fill(Color.black);
 	}
 
@@ -118,7 +118,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements Simp
 		if (origin() == null) return;
 		Monitor originTerminal = origin().mon;
 		originTerminal.removeAllGPUs();
-		originTerminal = new Monitor(m_width * 32, m_height * 32); //, getMonitorObject());
+		originTerminal = new Monitor(m_width * 32, m_height * 32, getMonitorObject());
 		origin().mon = originTerminal;
 		for (int y = 0; y < this.m_height; y++) {
 			for (int x = 0; x < this.m_width; x++) {
@@ -382,7 +382,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements Simp
 				below.expand();
 			}
 			mon.removeAllGPUs();
-			mon = new Monitor(32, 32); //, getMonitorObject());
+			mon = new Monitor(32, 32, getMonitorObject());
 			return;
 		}
 
