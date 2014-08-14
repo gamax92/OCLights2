@@ -120,7 +120,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 			}
 			else if (msg.name.equals("ccevent"))
 			{
-				// A tablet wants to send an event to ComputerCraft
+				// A tablet wants to send an event to OpenComputers
 				UUID tab = (UUID) msg.a;
 				String eventType = (String) msg.b;
 				Object[] eventArgs = (Object[]) msg.c;

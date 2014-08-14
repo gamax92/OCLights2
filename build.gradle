@@ -19,8 +19,8 @@ else
 	ext.buildNumber = 0
 
 version = "0.4.1"
-group = "ds.mods.CCLights2"
-archivesBaseName = "CCLights2"
+group = "ds.mods.OCLights2"
+archivesBaseName = "OCLights2"
 
 minecraft {
 	version = "1.6.4-9.11.1.964"

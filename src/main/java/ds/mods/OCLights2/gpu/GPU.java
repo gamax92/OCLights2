@@ -281,7 +281,7 @@ public class GPU {
 	/**
 	 * Process the DrawCMD, throws an exception if the command fails
 	 * @param cmd The command to process
-	 * @return Return values for ComputerCraft
+	 * @return Return values for OpenComputers
 	 * @throws Exception
 	 */
 	public Object[] processCommand(DrawCMD cmd) throws Exception
