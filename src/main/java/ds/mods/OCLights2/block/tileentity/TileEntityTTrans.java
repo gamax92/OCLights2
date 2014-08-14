@@ -118,7 +118,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 				update = true;
 				TabMesg.pushMessage(tab, new Message("connected"));
 			}
-			else if (msg.name.equals("ccevent"))
+			else if (msg.name.equals("ocevent"))
 			{
 				// A tablet wants to send an event to OpenComputers
 				UUID tab = (UUID) msg.a;

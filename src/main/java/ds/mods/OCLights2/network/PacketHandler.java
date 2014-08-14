@@ -157,8 +157,8 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 			if (mtile != null) {
 				String event = PacketData.readUTF();
 				int len = PacketData.readInt();
-				Object[] args = new Object[len];
-				for (int i1 = 0; i1 < len; i1++) {
+				Object[] args = new Object[len + 1];
+				for (int i1 = 1; i1 <= len; i1++) {
 					int type = PacketData.readInt();
 					switch (type) {
 					case 0: {
@@ -178,6 +178,7 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 				}
 				for (GPU g : mtile.mon.gpu) {
 					TileEntityGPU tile = g.tile;
+					args[0] = tile.node().address();
 					if (tile != null) {
 						for (Context c : tile.comp)
 							if (c != null) {

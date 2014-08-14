@@ -240,24 +240,16 @@ public final class PacketSenders {
 		outputStream.writeInt(tile.xCoord);
 		outputStream.writeInt(tile.yCoord);
 		outputStream.writeInt(tile.zCoord);
-		outputStream.writeUTF("key");
-		outputStream.writeInt(1);
+		outputStream.writeUTF("key_down");
+		outputStream.writeInt(2);
+		
+		outputStream.writeInt(0);
+		outputStream.writeInt(par1);
+		
 		outputStream.writeInt(0);
 		outputStream.writeInt(par2);
+		
 		createPacketAndSend(outputStream);
-
-		if (ChatAllowedCharacters.isAllowedCharacter(par1)) {
-			ByteArrayDataOutput outputStream1 = ByteStreams.newDataOutput();
-			outputStream1.writeByte(PacketHandler.NET_GPUEVENT);
-			outputStream1.writeInt(tile.xCoord);
-			outputStream1.writeInt(tile.yCoord);
-			outputStream1.writeInt(tile.zCoord);
-			outputStream1.writeUTF("char");
-			outputStream1.writeInt(1);
-			outputStream1.writeInt(2);
-			outputStream1.writeChar(par1);
-			createPacketAndSend(outputStream1);
-		}
 	}
 
 	public static void writeMatrix(ByteArrayDataOutput out, double[] matrix) {

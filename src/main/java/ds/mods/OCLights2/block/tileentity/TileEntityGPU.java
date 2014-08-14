@@ -31,7 +31,7 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.TileEntityEnvironment;
+import ds.mods.OCLights2.block.tileentity.TileEntityEnvironment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -56,7 +56,7 @@ import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.network.PacketSenders;
 
-public class TileEntityGPU extends TileEntity implements Environment {
+public class TileEntityGPU extends TileEntityEnvironment {
 	public GPU gpu;
 	private ArrayList<DrawCMD> newarr = new ArrayList<DrawCMD>();
 	public ArrayList<Context> comp = new ArrayList<Context>();
@@ -69,17 +69,11 @@ public class TileEntityGPU extends TileEntity implements Environment {
 	public static final CommandEnum[] EnumCache = CommandEnum.values();
 	private ManagedEnvironment fileSystem;
 
-	private ComponentConnector node = Network.newNode(this, Visibility.Network).withComponent("ocl_gpu").withConnector(32).create();
-	
 	public TileEntityGPU() {
 		gpu = new GPU(1024 * 8);
 		gpu.tile = this;
 		fileSystem = FileSystem.asManagedEnvironment(FileSystem.fromClass(OCLights2.class, "oclights", "lua"), "ocl_gpu");
-	}
-	
-	@Override
-	public Node node() {
-		return node;
+		node = Network.newNode(this, Visibility.Network).withComponent("ocl_gpu").create();
 	}
 
 	public void startClick(Player player, int button, int x, int y) {
@@ -91,7 +85,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		clickToDataMap.put(id, new int[] { button, x, y });
 
 		String event = "monitor_down";
-		Object[] args = new Object[] { button, x, y, id };
+		Object[] args = new Object[] { node.address(), x, y, button, id };
 		for (Context c : comp) {
 			c.signal(event, args);
 		}
@@ -105,7 +99,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		data[2] = ny;
 
 		String event = "monitor_move";
-		Object[] args = new Object[] { button, nx, ny, id };
+		Object[] args = new Object[] { node.address(), nx, ny, button, id };
 		for (Context c : comp) {
 			c.signal(event, args);
 		}
@@ -119,7 +113,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		int y = data[2];
 
 		String event = "monitor_up";
-		Object[] args = new Object[] { button, x, y, id };
+		Object[] args = new Object[] { node.address(), x, y, button, id };
 		for (Context c : comp) {
 			c.signal(event, args);
 		}
@@ -384,7 +378,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback(direct=true)
+	@Callback(value="import",direct=true)
 	public Object[] importData(Context context, Arguments args) throws Exception {
 		//import
 		double a = System.currentTimeMillis();
@@ -421,7 +415,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return ret;
 	}
 
-	@Callback(direct=true)
+	@Callback(value="export",direct=true)
 	public Object[] exportData(Context context, Arguments args) throws Exception {
 		//export
 		if (args.count() > 1) {
@@ -738,10 +732,11 @@ public class TileEntityGPU extends TileEntity implements Environment {
 
 	@Override
 	public synchronized void updateEntity() {
-		super.updateEntity();
-		if (node != null && node.network() == null) {
-			Network.joinOrCreateNetwork(this);
-		}
+        super.updateEntity();
+        if (!addedToNetwork) {
+            addedToNetwork = true;
+            Network.joinOrCreateNetwork(this);
+        }
 		synchronized (this) {
 			if (!frame) {
 				gpu.processSendList();
@@ -752,13 +747,6 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			PacketSenders.GPUDOWNLOAD(xCoord, yCoord, zCoord);
 			sentOnce = true;
 		}
-
-	}
-
-	@Override
-	public void onMessage(Message message) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/* @Override
