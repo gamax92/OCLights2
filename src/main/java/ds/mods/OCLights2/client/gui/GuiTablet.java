@@ -191,7 +191,7 @@ public class GuiTablet extends GuiScreen {
 	@Override
 	protected void keyTyped(char par1, int par2) {
 		super.keyTyped(par1, par2);
-		if (par2 > 2 && nbt.getBoolean("canDisplay")) {
+		if (par2 != 1 && nbt.getBoolean("canDisplay")) {
 			PacketSenders.sendKeyEvent(par1, par2, tile);
 		}
 	}
