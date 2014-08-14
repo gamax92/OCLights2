@@ -5,6 +5,7 @@ import java.awt.Color;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
 import li.cil.oc.api.network.Context;
+import li.cil.oc.api.prefab.AbstractValue;
 import net.minecraft.tileentity.TileEntity;
 import ds.mods.OCLights2.gpu.GPU;
 import ds.mods.OCLights2.gpu.Monitor;
@@ -28,7 +29,7 @@ public class TileEntityMonitor extends TileEntity {
 		return new MonitorObject();
 	}
 
-	public class MonitorObject
+	public class MonitorObject extends AbstractValue
 	{
 		@Callback(direct=true)
 		public Object[] getResolution(Context context, Arguments arguments) throws Exception {
