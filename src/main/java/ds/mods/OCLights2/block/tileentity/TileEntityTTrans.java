@@ -208,7 +208,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 	}
 	
 	@Override
-	public String getComponentName() {return "tablet_transciever";
+	public String getComponentName() {return "tablet_transceiver";
 	}
 
 	/* @Override

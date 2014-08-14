@@ -18,6 +18,7 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
+import li.cil.oc.api.FileSystem;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
@@ -25,10 +26,12 @@ import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.ComponentConnector;
 import li.cil.oc.api.network.Context;
 import li.cil.oc.api.network.Environment;
+import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.network.Visibility;
+import li.cil.oc.api.prefab.TileEntityEnvironment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -52,8 +55,7 @@ import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.network.PacketSenders;
 
-public class TileEntityGPU extends TileEntity implements Environment {
-
+public class TileEntityGPU extends TileEntityEnvironment {
 	public GPU gpu;
 	private ArrayList<DrawCMD> newarr = new ArrayList<DrawCMD>();
 	public ArrayList<Context> comp = new ArrayList<Context>();
@@ -64,23 +66,13 @@ public class TileEntityGPU extends TileEntity implements Environment {
 	private byte ticks = 0;
 	private boolean sentOnce = false;
 	public static final CommandEnum[] EnumCache = CommandEnum.values();
+	private ManagedEnvironment fileSystem;
 
 	public TileEntityGPU() {
 		gpu = new GPU(1024 * 8);
 		gpu.tile = this;
-	}
-
-	private Node node = Network.newNode(this, Visibility.Network).withComponent("ocl_gpu").create();
-
-	@Override
-	public Node node() {
-		return node;
-	}
-
-	@Override
-	public void onMessage(Message message) {
-		// TODO Auto-generated method stub
-
+		node = Network.newNode(this, Visibility.Network).withComponent("ocl_gpu").create();
+		fileSystem = FileSystem.asManagedEnvironment(FileSystem.fromClass(OCLights2.class, "oclights", "lua"), "ocl_gpu");
 	}
 
 	public void startClick(Player player, int button, int x, int y) {
@@ -672,6 +664,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 	public void onConnect(Node node) {
 		if (node.host() instanceof Context) {
 			comp.add((Context) node.host());
+			node.connect(fileSystem.node());
 		}
 		// TODO: FileSystem Driver?
 		/*
@@ -730,7 +723,10 @@ public class TileEntityGPU extends TileEntity implements Environment {
 	public void onDisconnect(Node node) {
 		if (node.host() instanceof Context) {
 			comp.remove((Context) node.host());
-		}
+			node.disconnect(fileSystem.node());
+		} else if (node == this.node) {
+            fileSystem.node().remove();
+        }
 	}
 
 	@Override
