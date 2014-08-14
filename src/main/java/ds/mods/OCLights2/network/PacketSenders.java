@@ -252,6 +252,24 @@ public final class PacketSenders {
 		createPacketAndSend(outputStream);
 	}
 
+	public static void sendKeyEventUp(char par1, int par2, TileEntityMonitor tile) {
+		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
+		outputStream.writeByte(PacketHandler.NET_GPUEVENT);
+		outputStream.writeInt(tile.xCoord);
+		outputStream.writeInt(tile.yCoord);
+		outputStream.writeInt(tile.zCoord);
+		outputStream.writeUTF("key_up");
+		outputStream.writeInt(2);
+		
+		outputStream.writeInt(0);
+		outputStream.writeInt(par1);
+		
+		outputStream.writeInt(0);
+		outputStream.writeInt(par2);
+		
+		createPacketAndSend(outputStream);
+	}
+	
 	public static void writeMatrix(ByteArrayDataOutput out, double[] matrix) {
 		for (int i = 0; i < matrix.length; i++) {
 			out.writeDouble(matrix[i]);
