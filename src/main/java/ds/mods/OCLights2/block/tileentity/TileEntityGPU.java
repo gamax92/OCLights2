@@ -31,7 +31,6 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.network.Visibility;
-import ds.mods.OCLights2.block.tileentity.TileEntityEnvironment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -56,7 +55,7 @@ import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.network.PacketSenders;
 
-public class TileEntityGPU extends TileEntityEnvironment {
+public class TileEntityGPU extends TileEntity implements Environment {
 	public GPU gpu;
 	private ArrayList<DrawCMD> newarr = new ArrayList<DrawCMD>();
 	public ArrayList<Context> comp = new ArrayList<Context>();
@@ -68,6 +67,8 @@ public class TileEntityGPU extends TileEntityEnvironment {
 	private boolean sentOnce = false;
 	public static final CommandEnum[] EnumCache = CommandEnum.values();
 	private ManagedEnvironment fileSystem;
+	protected Node node;
+	protected boolean addedToNetwork = false;
 
 	public TileEntityGPU() {
 		gpu = new GPU(1024 * 8);
@@ -633,7 +634,7 @@ public class TileEntityGPU extends TileEntityEnvironment {
 	}
 
 	@Callback(direct=true)
-	public Object[] ClearRectangle(Context context, Arguments args) throws Exception {
+	public Object[] clearRectangle(Context context, Arguments args) throws Exception {
 		//clearRect
 		if (args.count() >= 4) {
 			DrawCMD cmd = new DrawCMD();
@@ -674,13 +675,23 @@ public class TileEntityGPU extends TileEntityEnvironment {
 			comp.remove((Context) node.host());
 			node.disconnect(fileSystem.node());
 		} else if (node == this.node) {
-            fileSystem.node().remove();
-        }
+			fileSystem.node().remove();
+		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+		if (node != null && node.host() == this) {
+			final NBTTagCompound nodeNbt = new NBTTagCompound();
+			node.save(nodeNbt);
+			nbt.setCompoundTag("oc:node", nodeNbt);
+		}
+		if (fileSystem.node() != null) {
+			final NBTTagCompound nodeNbt = new NBTTagCompound();
+			fileSystem.node().save(nodeNbt);
+			nbt.setCompoundTag("oc:fsnode", nodeNbt);
+		}
 		nbt.setIntArray("addedTypes", addedType);
 		nbt.setInteger("vram", gpu.maxmem);
 	}
@@ -688,6 +699,12 @@ public class TileEntityGPU extends TileEntityEnvironment {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		if (node != null && node.host() == this) {
+			node.load(nbt.getCompoundTag("oc:node"));
+		}
+		if (fileSystem.node() != null) {
+			fileSystem.node().load(nbt.getCompoundTag("oc:fsnode"));
+		}
 		addedType = nbt.getIntArray("addedTypes");
 		if (addedType == null) {
 			addedType = new int[1025];
@@ -732,11 +749,11 @@ public class TileEntityGPU extends TileEntityEnvironment {
 
 	@Override
 	public synchronized void updateEntity() {
-        super.updateEntity();
-        if (!addedToNetwork) {
-            addedToNetwork = true;
-            Network.joinOrCreateNetwork(this);
-        }
+		super.updateEntity();
+		if (!addedToNetwork) {
+			addedToNetwork = true;
+			Network.joinOrCreateNetwork(this);
+		}
 		synchronized (this) {
 			if (!frame) {
 				gpu.processSendList();
@@ -747,6 +764,29 @@ public class TileEntityGPU extends TileEntityEnvironment {
 			PacketSenders.GPUDOWNLOAD(xCoord, yCoord, zCoord);
 			sentOnce = true;
 		}
+	}
+
+	@Override
+	public Node node() {
+		return node;
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		if (node != null)
+			node.remove();
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if (node != null)
+			node.remove();
+	}
+
+	@Override
+	public void onMessage(Message message) {
 	}
 
 	/* @Override

@@ -11,24 +11,23 @@ import ds.mods.OCLights2.gpu.Monitor;
 
 public class TileEntityMonitor extends TileEntity {
 	public Monitor mon;
-	
+
 	public TileEntityMonitor()
 	{
 		mon = new Monitor(256,144,getMonitorObject());
 		mon.tex.fill(Color.black);
 	}
-	
+
 	public void connect(GPU g)
 	{
 		mon.addGPU(g);
 	}
 
-	
 	public MonitorObject getMonitorObject()
 	{
 		return new MonitorObject();
 	}
-	
+
 	public class MonitorObject
 	{
 		@Callback(direct=true)
