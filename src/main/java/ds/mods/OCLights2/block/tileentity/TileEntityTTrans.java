@@ -186,22 +186,22 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 		}
 	}
 	
-	@Callback
+	@Callback(direct=true)
 	public Object[] getResolution(Context context, Arguments arguments) {
 		return new Object[]{mon.getWidth(),mon.getHeight()};
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getNumberOfTablets(Context context, Arguments arguments) {
 		return new Object[]{tablets.size()};
 	}
 	
-	@Callback
+	@Callback(direct=true)
 	public Object[] getTabletUUID(Context context, Arguments arguments) {
 		return new Object[]{tablets.get(arguments.checkInteger(0)).toString()};
 	}
 	
-	@Callback
+	@Callback(direct=true)
 	public Object[] disconnect(Context context, Arguments arguments) {
 		invalidate();
 		return null;

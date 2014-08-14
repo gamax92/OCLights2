@@ -28,7 +28,7 @@ public class TileEntityAdvancedlight extends TileEntity implements SimpleCompone
 	        return "light_adv";
 	    }
         
-        @Callback
+        @Callback(direct=true)
         public Object[] setColorRGB(Context context, Arguments arguments) throws Exception {
         	int r = arguments.checkInteger(0);
     		int g = arguments.checkInteger(1);
@@ -44,7 +44,7 @@ public class TileEntityAdvancedlight extends TileEntity implements SimpleCompone
             return null;
         }
         
-        @Callback
+        @Callback(direct=true)
         public Object[] getColorRGB(Context context, Arguments arguments) {
         	return (new Object[]{this.r,this.g,this.b});
         }

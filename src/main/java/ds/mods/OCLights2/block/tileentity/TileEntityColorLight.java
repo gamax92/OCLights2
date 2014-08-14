@@ -18,7 +18,7 @@ public class TileEntityColorLight  extends TileEntity implements SimpleComponent
 		return "light";
 	}
 	
-	@Callback
+	@Callback(direct=true)
 	public Object[] setColor(Context context, Arguments arguments) throws Exception {
 		String colorString = arguments.checkString(0);
 		try {
@@ -36,7 +36,7 @@ public class TileEntityColorLight  extends TileEntity implements SimpleComponent
         return null;
 	}
 	
-	@Callback
+	@Callback(direct=true)
 	public Object[] getColor(Context context, Arguments arguments) {
 		return (new Object[]{this.color});
 	}

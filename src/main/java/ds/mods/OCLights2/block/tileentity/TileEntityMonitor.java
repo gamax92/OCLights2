@@ -31,7 +31,7 @@ public class TileEntityMonitor extends TileEntity {
 	
 	public class MonitorObject
 	{
-		@Callback
+		@Callback(direct=true)
 		public Object[] getResolution(Context context, Arguments arguments) throws Exception {
 				return new Object[]{mon.getWidth(),mon.getHeight()};
 		}

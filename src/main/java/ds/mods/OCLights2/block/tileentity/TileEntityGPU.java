@@ -127,7 +127,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		clickToDataMap.remove(id);
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] fill(Context context, Arguments args) throws Exception {
 		//fill
 		DrawCMD cmd = new DrawCMD();
@@ -137,7 +137,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] createTexture(Context context, Arguments args) throws Exception {
 		//createTexture
 		if (args.count() > 1) {
@@ -160,25 +160,25 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getFreeMemory(Context context, Arguments args) {
 		//getFreeMemory
 		return new Object[] { gpu.getFreeMemory() };
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getTotalMemory(Context context, Arguments args) {
 		//getTotalMemory
 		return new Object[] { gpu.maxmem };
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getUsedMemory(Context context, Arguments args) {
 		//getUsedMemory
 		return new Object[] { gpu.getUsedMemory() };
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] bindTexture(Context context, Arguments args) throws Exception {
 		//bindTexture
 		if (args.count() > 0) {
@@ -196,7 +196,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] plot(Context context, Arguments args) throws Exception {
 		//was plot and setColorRGB is now plot
 		if (args.count() >= 2) {
@@ -221,7 +221,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] drawTexture(Context context, Arguments args) throws Exception {
 		//drawTexture
 		if (args.count() == 3) {
@@ -244,7 +244,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] freeTexture(Context context, Arguments args) throws Exception {
 		//freeTexture
 		if (args.count() == 1) {
@@ -260,7 +260,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] line(Context context, Arguments args) throws Exception {
 		//line
 		if (args.count() > 3) {
@@ -276,7 +276,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getSize(Context context, Arguments args) throws Exception {
 		//getSize
 		int tex = gpu.bindedSlot;
@@ -289,7 +289,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return new Object[] { texture.getWidth(), texture.getHeight() };
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getPixelColor(Context context, Arguments args) throws Exception {
 		//getPixelColor
 		if (args.count() > 1) {
@@ -302,7 +302,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] rectangle(Context context, Arguments args) throws Exception {
 		//rectangle
 		if (args.count() > 3) {
@@ -318,7 +318,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] filledRectangle(Context context, Arguments args) throws Exception {
 		//filledrectangle
 		if (args.count() > 3) {
@@ -334,13 +334,13 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getBindedTexture(Context context, Arguments args) {
 		//getBindedTexture
 		return new Object[] { gpu.bindedSlot };
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] setPixels(Context context, Arguments args) throws Exception {
 		//setPixels
 		if (args.count() < 4) {
@@ -368,7 +368,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] flipVertically(Context context, Arguments args) throws Exception {
 		//flipTextureV
 		if (args.count() > 0) {
@@ -384,7 +384,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] importData(Context context, Arguments args) throws Exception {
 		//import
 		double a = System.currentTimeMillis();
@@ -421,7 +421,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return ret;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] exportData(Context context, Arguments args) throws Exception {
 		//export
 		if (args.count() > 1) {
@@ -444,7 +444,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] drawText(Context context, Arguments args) throws Exception {
 		//Drawtext
 		if (args.count() > 2) {
@@ -479,7 +479,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getTextWidth(Context context, Arguments args) throws Exception {
 		//getTextWidth
 		if (args.count() > 0) {
@@ -490,7 +490,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] setColor(Context context, Arguments args) throws Exception {
 		//setColor
 		if (args.count() > 2) {
@@ -512,13 +512,13 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getColor(Context context, Arguments args) {
 		//getColor
 		return new Object[] { gpu.color.getRed(), gpu.color.getGreen(), gpu.color.getBlue(), gpu.color.getAlpha() };
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] translate(Context context, Arguments args) throws Exception {
 		//translate
 		double x = args.checkDouble(0);
@@ -534,7 +534,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] rotate(Context context, Arguments args) throws Exception {
 		//rotate
 		double r = args.checkDouble(0);
@@ -548,7 +548,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] rotateAround(Context context, Arguments args) throws Exception {
 		//rotateAround
 		double r = args.checkDouble(0);
@@ -566,7 +566,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] scale(Context context, Arguments args) throws Exception {
 		//scale
 		double x = args.checkDouble(0);
@@ -582,7 +582,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] push(Context context, Arguments args) throws Exception {
 		//push
 		DrawCMD cmd = new DrawCMD();
@@ -592,7 +592,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] pop(Context context, Arguments args) throws Exception {
 		//pop
 		DrawCMD cmd = new DrawCMD();
@@ -602,13 +602,13 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getMonitor(Context context, Arguments args) {
 		//getMonitor
 		return new Object[] { gpu.currentMonitor.obj }; // TODO: This doesn't work
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] blur(Context context, Arguments args) throws Exception {
 		//blur
 		if (args.count() > 0) {
@@ -624,21 +624,21 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] startFrame(Context context, Arguments args) {
 		//startFrame
 		frame = true;
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] endFrame(Context context, Arguments args) {
 		//endFrame
 		frame = false;
 		return null;
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] ClearRectangle(Context context, Arguments args) throws Exception {
 		//clearRect
 		if (args.count() >= 4) {
@@ -654,7 +654,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] origin(Context context, Arguments args) throws Exception {
 		//origin
 		DrawCMD cmd = new DrawCMD();

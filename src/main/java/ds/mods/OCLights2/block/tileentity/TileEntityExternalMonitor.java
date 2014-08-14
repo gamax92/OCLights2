@@ -461,17 +461,17 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements Simp
 		propogateTerminal();
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getResolution(Context context, Arguments arguments) {
 		return new Object[]{mon.getWidth(),mon.getHeight()};
 	}
 
-	@Callback
+	@Callback(direct=true)
 	public Object[] getDPM(Context context, Arguments arguments) {
 		return new Object[]{32};
 	}
 	
-	@Callback
+	@Callback(direct=true)
 	public Object[] getBlockResolution(Context context, Arguments arguments) {
 		return new Object[]{m_width,m_height};
 	}
