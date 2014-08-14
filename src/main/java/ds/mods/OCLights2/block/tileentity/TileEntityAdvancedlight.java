@@ -25,7 +25,7 @@ public class TileEntityAdvancedlight extends TileEntity implements SimpleCompone
 	    @Override
 		public String getComponentName()
 	    {
-	        return "LightAdv";
+	        return "light_adv";
 	    }
         
         @Callback

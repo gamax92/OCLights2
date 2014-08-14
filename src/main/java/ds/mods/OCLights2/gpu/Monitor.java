@@ -11,13 +11,13 @@ public class Monitor {
 	
 	private int width;
 	private int height;
-	public ILuaObject obj;
+	// public ILuaObject obj;
 	
 	/**
 	 * Make a new Monitor.
 	 * @param width,height,ILuaObject
 	 */
-	public Monitor(int w, int h, ILuaObject o)
+	public Monitor(int w, int h) //, ILuaObject o)
 	{
 		width = w;
 		height = h;
@@ -25,7 +25,7 @@ public class Monitor {
 		tex.rgbCache = new int[16*32*9*32];
 		tex.fill(Color.black);
 		tex.texUpdate();
-		obj = o;
+		// obj = o;
 	}
 	
 	/**

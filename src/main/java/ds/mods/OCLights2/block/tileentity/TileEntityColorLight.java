@@ -15,7 +15,7 @@ public class TileEntityColorLight  extends TileEntity implements SimpleComponent
     public static final List<String> colors = Arrays.asList( "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white");
 	@Override
 	public String getComponentName() {
-		return "Light";
+		return "light";
 	}
 	
 	@Callback

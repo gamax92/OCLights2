@@ -9,6 +9,7 @@ import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 
+import li.cil.oc.api.network.Context;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
@@ -178,9 +179,9 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 				for (GPU g : mtile.mon.gpu) {
 					TileEntityGPU tile = g.tile;
 					if (tile != null) {
-						for (IComputerAccess c : tile.comp)
+						for (Context c : tile.comp)
 							if (c != null) {
-								c.queueEvent(event, args);
+								c.signal(event, args);
 							}
 					}
 				}
@@ -223,9 +224,9 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 				for (GPU g : tile.mon.gpu) {
 					TileEntityGPU gtile = g.tile;
 					if (gtile != null) {
-						for (IComputerAccess c : gtile.comp)
+						for (Context c : gtile.comp)
 							if (c != null) {
-								c.queueEvent("tablet_image",new Object[]{table});
+								c.signal("tablet_image",new Object[]{table});
 							}
 					}
 				}

@@ -11,7 +11,7 @@ public class TileEntityMonitor extends TileEntity {
 	
 	public TileEntityMonitor()
 	{
-		mon = new Monitor(256,144,getMonitorObject());
+		mon = new Monitor(256,144);//,getMonitorObject());
 		mon.tex.fill(Color.black);
 	}
 	
@@ -21,20 +21,20 @@ public class TileEntityMonitor extends TileEntity {
 	}
 
 	
-	public ILuaObject getMonitorObject()
-	{
-		return new MonitorObject();
-	}
+	//public ILuaObject getMonitorObject()
+	//{
+		//return new MonitorObject();
+	//}
 	
-	public class MonitorObject implements ILuaObject
+	public class MonitorObject //implements ILuaObject
 	{
 
-		@Override
-		public String[] getMethodNames() {
-			return new String[]{"getResolution"};
-		}
+		//@Override
+		//public String[] getMethodNames() {
+			//return new String[]{"getResolution"};
+		//}
 
-		@Override
+		/* @Override
 		public Object[] callMethod(ILuaContext context, int method,
 				Object[] arguments) throws Exception {
 			switch (method)
@@ -45,7 +45,7 @@ public class TileEntityMonitor extends TileEntity {
 			}
 			}
 			return null;
-		}
+		} */
 		
 	}
 }

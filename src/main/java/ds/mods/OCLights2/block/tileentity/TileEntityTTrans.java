@@ -29,7 +29,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 	
 	public TileEntityTTrans()
 	{
-		mon = new Monitor(16*32,9*32,getMonitorObject());
+		mon = new Monitor(16*32,9*32); //,getMonitorObject());
 		mon.tex.fill(Color.black);
 		mon.tex.drawText("Tablet connected", 0, 0, Color.white);
 		mon.tex.texUpdate();
@@ -130,9 +130,9 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 					{
 						for (GPU g : mon.gpu)
 						{
-							for (IComputerAccess c : g.tile.comp)
+							for (Context c : g.tile.comp)
 							{
-								c.queueEvent(eventType, eventArgs);
+								c.signal(eventType, eventArgs);
 							}
 						}
 					}
@@ -208,7 +208,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 	}
 	
 	@Override
-	public String getComponentName() {return "TabletTransciever";
+	public String getComponentName() {return "tablet_transciever";
 	}
 
 	/* @Override
