@@ -42,6 +42,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.google.common.collect.ImmutableSortedSet;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import ds.mods.OCLights2.OCLights2;
@@ -55,7 +56,7 @@ import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.network.PacketSenders;
 
-public class TileEntityGPU extends TileEntityEnvironment {
+public class TileEntityGPU extends TileEntity implements Environment {
 	public GPU gpu;
 	private ArrayList<DrawCMD> newarr = new ArrayList<DrawCMD>();
 	public ArrayList<Context> comp = new ArrayList<Context>();
@@ -68,11 +69,17 @@ public class TileEntityGPU extends TileEntityEnvironment {
 	public static final CommandEnum[] EnumCache = CommandEnum.values();
 	private ManagedEnvironment fileSystem;
 
+	private ComponentConnector node = Network.newNode(this, Visibility.Network).withComponent("ocl_gpu").withConnector(32).create();
+	
 	public TileEntityGPU() {
 		gpu = new GPU(1024 * 8);
 		gpu.tile = this;
-		node = Network.newNode(this, Visibility.Network).withComponent("ocl_gpu").create();
 		fileSystem = FileSystem.asManagedEnvironment(FileSystem.fromClass(OCLights2.class, "oclights", "lua"), "ocl_gpu");
+	}
+	
+	@Override
+	public Node node() {
+		return node;
 	}
 
 	public void startClick(Player player, int button, int x, int y) {
@@ -598,7 +605,7 @@ public class TileEntityGPU extends TileEntityEnvironment {
 	@Callback
 	public Object[] getMonitor(Context context, Arguments args) {
 		//getMonitor
-		return new Object[] { gpu.currentMonitor.obj };
+		return new Object[] { gpu.currentMonitor.obj }; // TODO: This doesn't work
 	}
 
 	@Callback
@@ -665,57 +672,6 @@ public class TileEntityGPU extends TileEntityEnvironment {
 			comp.add((Context) node.host());
 			node.connect(fileSystem.node());
 		}
-		// TODO: FileSystem Driver?
-		/*
-		computer.mount("oclights2", new IMount() {
-			private static final String RESOURCE_PATH = "/assets/oclights/lua/";
-			private final SortedSet<String> files;
-
-			{
-				ImmutableSortedSet.Builder<String> files = ImmutableSortedSet.naturalOrder();
-				InputStream fileList = getClass().getResourceAsStream(RESOURCE_PATH + "files.lst");
-				if (fileList != null) {
-					Scanner sc = new Scanner(fileList);
-
-					while (sc.hasNextLine()) {
-						String fileName = sc.nextLine();
-						files.add(fileName);
-					}
-
-					sc.close();
-				}
-
-				this.files = files.build();
-			}
-
-			@Override
-			public boolean exists(String path) throws IOException {
-				return path.isEmpty() || files.contains(path);
-			}
-
-			@Override
-			public boolean isDirectory(String path) throws IOException {
-				return path.isEmpty();
-			}
-
-			@Override
-			public void list(String path, List<String> contents) throws IOException {
-				contents.addAll(files);
-			}
-
-			@Override
-			public long getSize(String path) throws IOException {
-				return 0;
-			}
-
-			@Override
-			public InputStream openForRead(String path) throws IOException {
-				if (!files.contains(path))
-					throw new IOException();
-				return getClass().getResourceAsStream(RESOURCE_PATH + path);
-			}
-
-		}); */
 	}
 
 	@Override
@@ -782,6 +738,10 @@ public class TileEntityGPU extends TileEntityEnvironment {
 
 	@Override
 	public synchronized void updateEntity() {
+		super.updateEntity();
+		if (node != null && node.network() == null) {
+			Network.joinOrCreateNetwork(this);
+		}
 		synchronized (this) {
 			if (!frame) {
 				gpu.processSendList();
@@ -793,6 +753,12 @@ public class TileEntityGPU extends TileEntityEnvironment {
 			sentOnce = true;
 		}
 
+	}
+
+	@Override
+	public void onMessage(Message message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/* @Override

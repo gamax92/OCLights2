@@ -17,7 +17,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import ds.mods.OCLights2.network.PacketHandler;
 
-@Mod(modid = "OCLights2", name = "OCLights2", version = "0.4.1-75",dependencies="required-after:OpenComponents",acceptedMinecraftVersions = "1.6.4")
+@Mod(modid = "OCLights2", name = "OCLights2", version = "0.4.1-75",dependencies="required-after:OpenComputers",acceptedMinecraftVersions = "1.6.4")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = { "OCLights2" },packetHandler = PacketHandler.class,connectionHandler = PacketHandler.class)
 public class OCLights2 {
 	@Mod.Instance("OCLights2")
