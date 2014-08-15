@@ -29,6 +29,9 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -680,6 +683,18 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+	}
+
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
+		this.readFromNBT(pkt.data);
+	}
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
