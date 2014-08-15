@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 
 import li.cil.oc.api.network.Context;
@@ -27,9 +28,9 @@ import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
-import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.ClientDrawThread;
 import ds.mods.OCLights2.Config;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityAdvancedlight;
 import ds.mods.OCLights2.block.tileentity.TileEntityExternalMonitor;
 import ds.mods.OCLights2.block.tileentity.TileEntityGPU;
@@ -41,7 +42,7 @@ import ds.mods.OCLights2.gpu.GPU;
 import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.serialize.Serialize;
 
-public class PacketHandler implements IPacketHandler,IConnectionHandler {
+public class PacketHandler implements IPacketHandler, IConnectionHandler {
 	static final byte NET_GPUDRAWLIST = 0;
 	static final byte NET_GPUEVENT = 1;
 	static final byte NET_GPUDOWNLOAD = 2;
@@ -58,13 +59,13 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 	{
 		if (doThreadding) {
 			thread = new ClientDrawThread();
+			thread.setName("OCLights2 Draw Thread");
 			thread.start();
 		}
 	}
 
 	@Override
-	public void onPacketData(INetworkManager manager,
-			Packet250CustomPayload packet, Player player) {
+	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
 		ByteArrayDataInput maindat = ByteStreams.newDataInput(packet.data);
 		byte typ = maindat.readByte();
 		if (typ == NET_SPLITPACKET) {
@@ -79,8 +80,7 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 					while (zipStream.available() > 0) {
 						bo.write(zipStream.read());
 					}
-					ByteArrayDataInput dat = ByteStreams.newDataInput(bo
-							.toByteArray());
+					ByteArrayDataInput dat = ByteStreams.newDataInput(bo.toByteArray());
 					zipStream.close();
 					input.close();
 					typ = dat.readByte();
@@ -102,8 +102,7 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 		}
 	}
 
-	public static void ServerSide(byte typ, ByteArrayDataInput PacketData,
-			Player player) {
+	public static void ServerSide(byte typ, ByteArrayDataInput PacketData, Player player) {
 		EntityPlayerMP playr = (EntityPlayerMP) player;
 		switch (typ) {
 		case (NET_GPUMOUSE): {
@@ -170,8 +169,7 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 						break;
 					}
 					case 2: {
-						args[i1] = String.valueOf(PacketData
-								.readChar());
+						args[i1] = String.valueOf(PacketData.readChar());
 						break;
 					}
 					}
@@ -195,10 +193,10 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 			int z = PacketData.readInt();
 			TileEntityGPU tile = (TileEntityGPU) MinecraftServer.getServer().worldServers[playr.dimension].getBlockTileEntity(x, y, z);
 			if (tile != null) {
-				PacketSenders.sendPacketToPlayer(x, y, z, tile,player);
+				PacketSenders.sendPacketToPlayer(x, y, z, tile, player);
 				for (int i1 = 0; i1 < tile.gpu.textures.length; i1++) {
 					if (tile.gpu.textures[i1] != null) {
-						PacketSenders.sendTextures(player,tile.gpu.textures[i1], i1, x, y, z);
+						PacketSenders.sendTextures(player, tile.gpu.textures[i1], i1, x, y, z);
 					}
 				}
 			}
@@ -217,17 +215,16 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 				ByteArrayInputStream in = new ByteArrayInputStream(arr);
 				Double at = 1D;
 				int r;
-				while ((r = in.read()) != -1)
-				{
-					table.put(at++,(double) r);
+				while ((r = in.read()) != -1) {
+					table.put(at++, (double) r);
 				}
-				
+
 				for (GPU g : tile.mon.gpu) {
 					TileEntityGPU gtile = g.tile;
 					if (gtile != null) {
 						for (Context c : gtile.comp)
 							if (c != null) {
-								c.signal("tablet_image",new Object[]{table});
+								c.signal("tablet_image", new Object[] { table });
 							}
 					}
 				}
@@ -252,18 +249,14 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 					int lent = PacketData.readInt();
 					cmd.args = new Object[lent];
 					for (int g = 0; g < lent; g++) {
-						if (PacketData.readByte() == -1)
-						{
+						if (PacketData.readByte() == -1) {
 							int count = PacketData.readInt();
 							cmd.args[g] = new Object[count];
 							Object[] arr = (Object[]) cmd.args[g];
-							for (int e = 0; e<count; e++)
-							{
+							for (int e = 0; e < count; e++) {
 								arr[e] = Serialize.unserialize(PacketData);
 							}
-						}
-						else
-						{
+						} else {
 							PacketData.skipBytes(-1);
 							cmd.args[g] = Serialize.unserialize(PacketData);
 						}
@@ -276,13 +269,13 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 						}
 					else {
 						if (!thread.isAlive()) {
-							OCLights2.debug("The client draw thread died, restarting");
+							OCLights2.logger.log(Level.SEVERE, "The client draw thread died, restarting");
 							thread = new ClientDrawThread();
+							thread.setName("OCLights2 Draw Thread");
 							thread.start();
 						}
 						if (thread.draws.get(tile.gpu) == null) {
-							thread.draws.put(tile.gpu,
-									new ArrayDeque<DrawCMD>());
+							thread.draws.put(tile.gpu, new ArrayDeque<DrawCMD>());
 						}
 						thread.draws.get(tile.gpu).addLast(cmd);
 					}
@@ -294,8 +287,7 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld()
-					.getBlockTileEntity(x, y, z);
+			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
 			if (tile == null)
 				return;
 			if (tile.gpu == null)
@@ -315,7 +307,7 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getBlockTileEntity(x, y,z);
+			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
 			if (tile == null || tile.gpu == null)
 				return;
 			recTexture(PacketData, tile);
@@ -325,8 +317,7 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityExternalMonitor tile = (TileEntityExternalMonitor) ClientProxy
-					.getClientWorld().getBlockTileEntity(x, y, z);
+			TileEntityExternalMonitor tile = (TileEntityExternalMonitor) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
 			if (tile != null) {
 				tile.handleUpdatePacket(PacketData);
 			}
@@ -336,8 +327,7 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityAdvancedlight tile = (TileEntityAdvancedlight) ClientProxy.getClientWorld()
-					.getBlockTileEntity(x, y, z);
+			TileEntityAdvancedlight tile = (TileEntityAdvancedlight) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
 			if (tile != null) {
 				TileEntityAdvancedlight ntile = tile;
 				ntile.r = PacketData.readFloat();
@@ -346,7 +336,8 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 			}
 			break;
 		}
-		case(NET_SYNC):{}
+		case (NET_SYNC): {
+		}
 		}
 	}
 
@@ -377,28 +368,34 @@ public class PacketHandler implements IPacketHandler,IConnectionHandler {
 	}
 
 	@Override
-	public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager)
-	{
-		if(Config.monitorSize[0] != 256 || Config.monitorSize[1] != 144){
-			if(MinecraftServer.getServer().isDedicatedServer()){
-				PacketSenders.SYNC(Config.monitorSize[0], Config.monitorSize[1],player);}
+	public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager) {
+		if (Config.monitorSize[0] != 256 || Config.monitorSize[1] != 144) {
+			if (MinecraftServer.getServer().isDedicatedServer()) {
+				PacketSenders.SYNC(Config.monitorSize[0], Config.monitorSize[1], player);
+			}
 		}
 	}
+
 	@Override
-	public void clientLoggedIn(NetHandler clientHandler,INetworkManager manager, Packet1Login login) 
-	{
-		if(Minecraft.getMinecraft().isSingleplayer())
-		{
+	public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
+		if (Minecraft.getMinecraft().isSingleplayer()) {
 			OCLights2.debug("Singleplayer detected, sync not needed");
-		}
-		else{
+		} else {
 			Config.setDefaults();
 			OCLights2.debug("PREP'd for SYNC");
 		}
 	}
 
-	public String connectionReceived(NetLoginHandler netHandler,INetworkManager manager) {return null;}
-	public void connectionOpened(NetHandler netClientHandler, String server,int port, INetworkManager manager) {}
-	public void connectionOpened(NetHandler netClientHandler,MinecraftServer server, INetworkManager manager) {}
-	public void connectionClosed(INetworkManager manager) {}
+	public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager) {
+		return null;
+	}
+
+	public void connectionOpened(NetHandler netClientHandler, String server, int port, INetworkManager manager) {
+	}
+
+	public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, INetworkManager manager) {
+	}
+
+	public void connectionClosed(INetworkManager manager) {
+	}
 }

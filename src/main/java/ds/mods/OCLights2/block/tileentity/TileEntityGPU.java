@@ -1,14 +1,18 @@
 package ds.mods.OCLights2.block.tileentity;
 
-import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
@@ -23,6 +27,7 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -383,6 +388,11 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			data = Convert.toByte(args.checkByteArray(0));
 		} else if (args.count() == 2 && args.isString(0) && args.isString(1)) {
 			String address = args.checkString(0);
+			Node testNode = node.network().node(address);
+			if (testNode == null)
+				throw new Exception("No such component");
+			else if (!testNode.canBeReachedFrom(node))
+				throw new Exception("Cannot reach component");
 			String path = args.checkString(1);
 			File cleanPath = new File("/",path);
 			File f = new File(OCLights2.proxy.getWorldDir(worldObj), "opencomputers" + File.separatorChar + address + File.separatorChar + cleanPath.getCanonicalPath());
@@ -591,7 +601,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 	@Callback(direct=true)
 	public Object[] getMonitor(Context context, Arguments args) {
 		//getMonitor
-		return new Object[] { gpu.currentMonitor.obj }; // TODO: This doesn't work
+		return new Object[] { gpu.currentMonitor.obj };
 	}
 
 	@Callback(direct=true)
@@ -685,6 +695,21 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 		nbt.setIntArray("addedTypes", addedType);
 		nbt.setInteger("vram", gpu.maxmem);
+		NBTTagCompound textures = new NBTTagCompound();
+		for (int texid = 1; texid < gpu.textures.length; texid++) {
+			if (gpu.textures[texid] != null) {
+				try {
+					ByteArrayOutputStream output = new ByteArrayOutputStream();
+					ImageIO.write(gpu.textures[texid].img, "png", output);
+					byte[] data = output.toByteArray();
+					textures.setByteArray(String.valueOf(texid), data);
+				} catch (IOException e) {
+					OCLights2.logger.log(Level.WARNING, "Failed to save texture " + texid);
+					OCLights2.logger.log(Level.WARNING, e.getLocalizedMessage());
+				}
+			}
+		}
+		nbt.setTag("textures", textures);
 	}
 
 	@Override
@@ -707,6 +732,24 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		if (init > gpu.maxmem) {
 			gpu.maxmem = init;
 		}
+		NBTTagCompound textures = nbt.getCompoundTag("textures");
+		Iterator tagIterator = textures.getTags().iterator();
+		while (tagIterator.hasNext()) {
+			NBTTagByteArray texture = (NBTTagByteArray) tagIterator.next();
+			int texid = Integer.parseInt(texture.getName());
+			
+			BufferedImage img = null;
+			try {
+				img = ImageIO.read(new ByteArrayInputStream(texture.byteArray));
+			} catch (IOException e) {
+			}
+			if (img == null) {
+				OCLights2.logger.log(Level.WARNING, "Failed to load texture " + texture.getName());
+			} else {
+				gpu.textures[texid] = new Texture(img.getWidth(),img.getHeight());
+				gpu.textures[texid].graphics.drawImage(img, 0, 0, null);
+			}
+		}
 	}
 
 	public void connectToMonitor() {
@@ -727,8 +770,8 @@ public class TileEntityGPU extends TileEntity implements Environment {
 						if (found)
 							break;
 						tile.connect(this.gpu);
-						tile.mon.tex.fill(Color.black);
-						tile.mon.tex.drawText("Monitor connected", 0, 0, Color.white);
+						//tile.mon.tex.fill(Color.black);
+						//tile.mon.tex.drawText("Monitor connected", 0, 0, Color.white);
 						tile.mon.tex.texUpdate();
 						gpu.setMonitor(tile.mon);
 						return;
