@@ -1,5 +1,6 @@
 package ds.mods.OCLights2.block.tileentity;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -725,6 +726,8 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			}
 		}
 		nbt.setTag("textures", textures);
+		nbt.setInteger("bindedSlot", gpu.bindedSlot);
+		nbt.setInteger("color",gpu.color.getRGB());
 	}
 
 	@Override
@@ -764,6 +767,16 @@ public class TileEntityGPU extends TileEntity implements Environment {
 				gpu.textures[texid] = new Texture(img.getWidth(),img.getHeight());
 				gpu.textures[texid].graphics.drawImage(img, 0, 0, null);
 			}
+		}
+		if (nbt.hasKey("bindedSlot") && nbt.getInteger("bindedSlot") != 0) {
+			try {
+				gpu.bindTexture(nbt.getInteger("bindedSlot"));
+			} catch (Exception e) {
+				OCLights2.logger.log(Level.WARNING, "Failed to restore binded texture state");
+			}
+		}
+		if (nbt.hasKey("color")) {
+			gpu.color = new Color(nbt.getInteger("color"),true);
 		}
 	}
 
