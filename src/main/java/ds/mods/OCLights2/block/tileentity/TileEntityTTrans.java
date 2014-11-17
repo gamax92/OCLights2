@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -74,7 +74,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 			for (int i=0; i<lst.tagCount(); i++)
 			{
 				NBTTagString str = (NBTTagString) lst.tagAt(i);
-				tablets.add(UUID.fromString(str.data));
+				tablets.add(UUID.fromString(str.func_150285_a_()));
 			}
 		}
 		update = true;

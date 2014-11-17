@@ -4,12 +4,14 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,17 +20,17 @@ import ds.mods.OCLights2.block.tileentity.TileEntityGPU;
 import ds.mods.OCLights2.item.ItemRAM;
 
 public class BlockGPU extends Block{
-	Icon sides = null;
-	public BlockGPU(int par1, Material par2Material) {
-		super(par1, par2Material);
-		this.setUnlocalizedName("gpu");
+	IIcon sides = null;
+	public BlockGPU(Material par2Material) {
+		super(par2Material);
+		this.setBlockName("gpu");
 		this.setCreativeTab(OCLights2.ocltab);
-		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
+		this.setHardness(0.6F).setStepSound(Block.soundTypeStone);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta) {
+	public IIcon getIcon(int side, int meta) {
 		if (side == 0 || side == 1) {
 			return this.blockIcon;
 		}
@@ -46,13 +48,13 @@ public class BlockGPU extends Block{
 			if (!par5EntityPlayer.capabilities.isCreativeMode) {
 				curr.stackSize--;
 			}
-			TileEntityGPU tile = (TileEntityGPU) par1World.getBlockTileEntity(
+			TileEntityGPU tile = (TileEntityGPU) par1World.getTileEntity(
 					par2, par3, par4);
 			tile.addedType[curr.getItemDamage()]++;
 			tile.gpu.maxmem += 1024 * (curr.getItemDamage() + 1);
 			if (par1World.isRemote) {
-				par5EntityPlayer.addChatMessage((curr.getItemDamage() + 1)
-						+ "K of RAM added to GPU");
+				par5EntityPlayer.addChatMessage(new ChatComponentText((curr.getItemDamage() + 1)
+						+ "K of RAM added to GPU"));
 			}
 			return true;
 		}
@@ -61,10 +63,10 @@ public class BlockGPU extends Block{
 
 	@Override
 	public void breakBlock(World par1World, int par2, int par3, int par4,
-			int par5, int par6) {
+			Block par5, int par6) {
 		if (!par1World.isRemote) {
 			Random rand = new Random();
-			TileEntityGPU tile = (TileEntityGPU) par1World.getBlockTileEntity(par2, par3, par4);
+			TileEntityGPU tile = (TileEntityGPU) par1World.getTileEntity(par2, par3, par4);
 			if(tile != null && tile.addedType != null){
 			for (int i = 0; i < tile.addedType.length; i++) {
 				int n = tile.addedType[i];
@@ -106,7 +108,7 @@ public class BlockGPU extends Block{
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister par1IconRegister) {
 		this.blockIcon = par1IconRegister.registerIcon("oclights:gpufront");
 		sides = par1IconRegister.registerIcon("oclights:gpusides");
 	}

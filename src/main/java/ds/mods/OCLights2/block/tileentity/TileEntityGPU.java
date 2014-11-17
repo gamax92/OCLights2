@@ -13,15 +13,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
 import li.cil.oc.api.FileSystem;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Message;
@@ -34,9 +33,10 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
@@ -702,12 +702,12 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		if (node != null && node.host() == this) {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
 			node.save(nodeNbt);
-			nbt.setCompoundTag("oc:node", nodeNbt);
+			nbt.setTag("oc:node", nodeNbt);
 		}
 		if (fileSystem.node() != null) {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
 			fileSystem.node().save(nodeNbt);
-			nbt.setCompoundTag("oc:fsnode", nodeNbt);
+			nbt.setTag("oc:fsnode", nodeNbt);
 		}
 		nbt.setIntArray("addedTypes", addedType);
 		nbt.setInteger("vram", gpu.maxmem);
@@ -720,8 +720,8 @@ public class TileEntityGPU extends TileEntity implements Environment {
 					byte[] data = output.toByteArray();
 					textures.setByteArray(String.valueOf(texid), data);
 				} catch (IOException e) {
-					OCLights2.logger.log(Level.WARNING, "Failed to save texture " + texid);
-					OCLights2.logger.log(Level.WARNING, e.getLocalizedMessage());
+					OCLights2.logger.log(Level.WARN, "Failed to save texture " + texid);
+					OCLights2.logger.log(Level.WARN, e.getLocalizedMessage());
 				}
 			}
 		}
@@ -758,11 +758,11 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			
 			BufferedImage img = null;
 			try {
-				img = ImageIO.read(new ByteArrayInputStream(texture.byteArray));
+				img = ImageIO.read(new ByteArrayInputStream(texture.func_150292_c()));
 			} catch (IOException e) {
 			}
 			if (img == null) {
-				OCLights2.logger.log(Level.WARNING, "Failed to load texture " + texture.getName());
+				OCLights2.logger.log(Level.WARN, "Failed to load texture " + texture.getName());
 			} else {
 				gpu.textures[texid] = new Texture(img.getWidth(),img.getHeight());
 				gpu.textures[texid].graphics.drawImage(img, 0, 0, null);
@@ -772,7 +772,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			try {
 				gpu.bindTexture(nbt.getInteger("bindedSlot"));
 			} catch (Exception e) {
-				OCLights2.logger.log(Level.WARNING, "Failed to restore binded texture state");
+				OCLights2.logger.log(Level.WARN, "Failed to restore binded texture state");
 			}
 		}
 		if (nbt.hasKey("color")) {
@@ -783,10 +783,10 @@ public class TileEntityGPU extends TileEntity implements Environment {
 	public void connectToMonitor() {
 		for (int i = 0; i < ForgeDirection.VALID_DIRECTIONS.length; i++) {
 			ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
-			TileEntity ftile = worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			TileEntity ftile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 			if (ftile != null) {
 				if (ftile instanceof TileEntityMonitor) {
-					TileEntityMonitor tile = (TileEntityMonitor) worldObj.getBlockTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+					TileEntityMonitor tile = (TileEntityMonitor) worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 					if (tile != null) {
 						boolean found = false;
 						for (Monitor m : gpu.monitors) {

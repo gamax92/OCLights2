@@ -129,7 +129,7 @@ public class TabletRenderer implements IItemRenderer {
 					{
 						if (Minecraft.getMinecraft().theWorld == null) {GL11.glPopMatrix(); return;}
 						TileEntity noncast = Minecraft.getMinecraft().theWorld
-								.getBlockTileEntity(
+								.getTileEntity(
 										(Integer)TabMesg.getTabVar(trans, "x"),
 										(Integer)TabMesg.getTabVar(trans, "y"),
 										(Integer)TabMesg.getTabVar(trans, "z"));

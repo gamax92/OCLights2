@@ -2,11 +2,11 @@ package ds.mods.OCLights2.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -15,13 +15,13 @@ import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityTTrans;
 
 public class BlockTabletTransceiver extends Block {
-	Icon sides = null;
+	IIcon sides = null;
 	
-	public BlockTabletTransceiver(int par1, Material par2Material) {
-		super(par1, par2Material);
-		this.setUnlocalizedName("monitor.tablet");
+	public BlockTabletTransceiver(Material par2Material) {
+		super(par2Material);
+		this.setBlockName("monitor.tablet");
 		this.setCreativeTab(OCLights2.ocltab);
-		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
+		this.setHardness(0.6F).setStepSound(Block.soundTypeStone);
 	}
 	
 	@Override
@@ -52,7 +52,7 @@ public class BlockTabletTransceiver extends Block {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta) {
+	public IIcon getIcon(int side, int meta) {
 			if(meta == side || side == 4 && meta == 0) {
 			return this.blockIcon;
 			} else {
@@ -63,7 +63,7 @@ public class BlockTabletTransceiver extends Block {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister par1IconRegister) {
 		this.blockIcon = par1IconRegister.registerIcon("oclights:tabletTfront");
 	    sides = par1IconRegister.registerIcon("oclights:tabletTsides");
 	}

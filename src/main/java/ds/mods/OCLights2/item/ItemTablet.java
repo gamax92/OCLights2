@@ -3,7 +3,8 @@ package ds.mods.OCLights2.item;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,8 +21,8 @@ import ds.mods.OCLights2.utils.TabMesg.Message;
 
 public class ItemTablet extends Item {
 
-	public ItemTablet(int par1) {
-		super(par1);
+	public ItemTablet() {
+		super();
 		this.setMaxStackSize(1);
 		this.setNoRepair();
 		this.setUnlocalizedName("tablet");
@@ -40,7 +41,7 @@ public class ItemTablet extends Item {
 			if (par1ItemStack.getTagCompound().getBoolean("canDisplay") && par3World.isRemote) {
 				UUID trans = UUID.fromString(par1ItemStack.getTagCompound().getString("trans"));
 				if(TabletRenderer.isInOfRange(trans)){
-				TileEntityTTrans tile = (TileEntityTTrans) par3World.getBlockTileEntity(
+				TileEntityTTrans tile = (TileEntityTTrans) par3World.getTileEntity(
 								(Integer) TabMesg.getTabVar(trans, "x"),
 								(Integer) TabMesg.getTabVar(trans, "y"),
 								(Integer) TabMesg.getTabVar(trans, "z"));
@@ -60,10 +61,10 @@ public class ItemTablet extends Item {
 			int par6, int par7, float par8, float par9, float par10) {
 		NBTTagCompound nbt = getNBT(par1ItemStack,par3World);
 		
-		if (!par3World.isRemote && OCLights2.ttrans.blockID == par3World.getBlockId(par4, par5, par6))
+		if (!par3World.isRemote && Block.isEqualTo(OCLights2.ttrans, par3World.getBlock(par4, par5, par6)))
 		{
 			nbt.setBoolean("canDisplay",true);
-			TileEntityTTrans tile = (TileEntityTTrans) par3World.getBlockTileEntity(par4, par5, par6);
+			TileEntityTTrans tile = (TileEntityTTrans) par3World.getTileEntity(par4, par5, par6);
 			nbt.setString("trans", tile.id.toString());
 			TabMesg.pushMessage(tile.id, new Message("connect",UUID.fromString(nbt.getString("uuid"))));
 			return false;
@@ -109,5 +110,5 @@ public class ItemTablet extends Item {
 	//stuff loads faster when forge is satisfied at load
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister){}
+	public void registerIcons(IIconRegister par1IconRegister){}
 }

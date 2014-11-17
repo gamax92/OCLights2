@@ -2,12 +2,12 @@ package ds.mods.OCLights2.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -16,13 +16,13 @@ import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityMonitor;
 
 public class BlockMonitor extends Block {
-	Icon sides = null;
+	IIcon sides = null;
 
-	public BlockMonitor(int par1, Material par2Material) {
-		super(par1, par2Material);
-		this.setUnlocalizedName("monitor.normal");
+	public BlockMonitor(Material par2Material) {
+		super(par2Material);
+		this.setBlockName("monitor.normal");
 		this.setCreativeTab(OCLights2.ocltab);
-		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
+		this.setHardness(0.6F).setStepSound(Block.soundTypeStone);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class BlockMonitor extends Block {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta) {
+	public IIcon getIcon(int side, int meta) {
 		if (meta == side|| side == 4 && meta == 0) {
 			return this.blockIcon;
 		} else {
@@ -61,7 +61,7 @@ public class BlockMonitor extends Block {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister par1IconRegister) {
 		this.blockIcon = par1IconRegister.registerIcon("oclights:monitorfront");
 		sides = par1IconRegister.registerIcon("oclights:monitorsides");
 	}
@@ -78,7 +78,7 @@ public class BlockMonitor extends Block {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float what, float these, float are) {
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity == null || player.isSneaking()) {
 			return false;
 		}

@@ -4,6 +4,8 @@ import java.io.File;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -21,7 +23,6 @@ import ds.mods.OCLights2.block.tileentity.TileEntityMonitor;
 import ds.mods.OCLights2.block.tileentity.TileEntityTTrans;
 import ds.mods.OCLights2.item.ItemRAM;
 import ds.mods.OCLights2.item.ItemTablet;
-import ds.mods.OCLights2.utils.RegisterHelper;
 
 public class CommonProxy {
 	public static int modelID;
@@ -31,72 +32,59 @@ public class CommonProxy {
 	public void registerBlocks()
 	{	
 		boolean gpu = false, monitor = false, monitorBig = false, light = false, advancedlight = false, ttrans = false, ram = false, tablet = false;
-		if(RegisterHelper.canRegisterBlock(Config.Gpu, "GPU")) {
-			OCLights2.gpu = new BlockGPU(Config.Gpu, Material.iron);
+			OCLights2.gpu = new BlockGPU(Material.iron);
 			
 			GameRegistry.registerBlock(OCLights2.gpu, "OCLGPU");
 			GameRegistry.registerTileEntity(TileEntityGPU.class, "GPU");
 			gpu = true;
-		}
-		if (RegisterHelper.canRegisterBlock(Config.Monitor, "Monitor")) {
-			OCLights2.monitor = new BlockMonitor(Config.Monitor, Material.iron);
+
+			OCLights2.monitor = new BlockMonitor(Material.iron);
 			
 			GameRegistry.registerBlock(OCLights2.monitor, "OCLMonitor");
 			GameRegistry.registerTileEntity(TileEntityMonitor.class, "OCLMonitorTE");
 			
 			monitor = true;
-		}
-		
-		if (RegisterHelper.canRegisterBlock(Config.MonitorBig, "ExternalMonitor")) {
-			OCLights2.monitorBig = new BlockExternalMonitor(Config.MonitorBig, Material.iron);
+
+			OCLights2.monitorBig = new BlockExternalMonitor(Material.iron);
 			
 			GameRegistry.registerBlock(OCLights2.monitorBig, "OCLBigMonitor");
 			GameRegistry.registerTileEntity(TileEntityExternalMonitor.class, "OCLBigMonitorTE");
 			
 			monitorBig = true;
-		}
-		
-		/*if (RegisterHelper.canRegisterBlock(Config.light, "Light")) {
+
+		/*
 			OCLights2.light = new BlockColorLight(Config.light, Material.iron);
 																				
 			GameRegistry.registerBlock(OCLights2.light, "OCLLIGHT");
 			GameRegistry.registerTileEntity(TileEntityColorLight.class, "OCLLight");
 			light = true;
-		}
 
-		if (RegisterHelper.canRegisterBlock(Config.advlight, "advLight")) {
 			OCLights2.advancedlight = new BlockAdvancedLight(Config.advlight, Material.iron);
 			
 			GameRegistry.registerBlock(OCLights2.advancedlight, "OCLADVLIGHT");
 			GameRegistry.registerTileEntity(TileEntityAdvancedlight.class, "OCLAdvLight");
 			
 			advancedlight = true;
-		}*/
-
-		if (RegisterHelper.canRegisterBlock(Config.TTrans, "TableTransciever")) {
-			OCLights2.ttrans = new BlockTabletTransceiver(Config.TTrans, Material.iron);
+		*/
+			
+			OCLights2.ttrans = new BlockTabletTransceiver(Material.iron);
 			
 			GameRegistry.registerBlock(OCLights2.ttrans, "OCLTTrans");
 			GameRegistry.registerTileEntity(TileEntityTTrans.class, "OCLTTransTE");
 			
 			ttrans = true;
-		}
 
-		if (RegisterHelper.canRegisterItem(Config.Ram, "Ram")) {
-			OCLights2.ram = new ItemRAM(Config.Ram);
+			OCLights2.ram = new ItemRAM();
 			
 			GameRegistry.registerItem(OCLights2.ram, "OCLRAM");
 			
 			ram = true;
-		}
 
-		if (RegisterHelper.canRegisterItem(Config.Tablet, "Tablet")) {
-			OCLights2.tablet = new ItemTablet(Config.Tablet);
+			OCLights2.tablet = new ItemTablet();
 			
 			GameRegistry.registerItem(OCLights2.tablet, "OCLTab");
 			
 			tablet = true;
-		}
 		
 		if (Config.Vanilla) {
 			registerVanillaRecipes(gpu, monitor, monitorBig, light, advancedlight, ttrans, ram, tablet);
@@ -112,28 +100,28 @@ public class CommonProxy {
 		if (gpu) {
 			GameRegistry.addRecipe(new ItemStack(OCLights2.gpu, 1),
 					new Object[] { "III", "RGR", "GGG", 'I',
-							Item.ingotIron, 'R', Item.redstone, 'G',
-							Item.ingotGold });
+							Items.iron_ingot, 'R', Items.redstone, 'G',
+							Items.gold_ingot });
 		}
 		if (monitor) {
 			GameRegistry.addRecipe(new ItemStack(OCLights2.monitor, 2),
 					new Object[] { "III", "RLR", "GGG", 'I',
-							Item.ingotIron, 'R', Item.redstone, 'G',
-							Item.ingotGold, 'L', Block.thinGlass });
+							Items.iron_ingot, 'R', Items.redstone, 'G',
+							Items.gold_ingot, 'L', Blocks.glass_pane });
 		}
 		if (monitorBig) {
 			GameRegistry.addRecipe(new ItemStack(OCLights2.monitorBig, 8),
 					new Object[] { "LLL", "LGL", "LLL", 'G',
-							OCLights2.monitor, 'L', Block.thinGlass });
+							OCLights2.monitor, 'L', Blocks.glass_pane });
 		}
 		if (ttrans) {
 			GameRegistry.addRecipe(new ItemStack(OCLights2.ttrans, 1),
 					new Object[] { " L ", "LGL", " L ", 'G',
-							OCLights2.monitor, 'L', Item.redstone });
+							OCLights2.monitor, 'L', Items.redstone });
 		}
 		if (ram) {
 			GameRegistry.addRecipe(new ItemStack(OCLights2.ram, 8),
-					new Object[] { "III", "R R", "GGG", 'I', Item.ingotIron, 'R', Block.blockRedstone, 'G', Item.ingotGold, 'L', Block.thinGlass });
+					new Object[] { "III", "R R", "GGG", 'I', Items.iron_ingot, 'R', Blocks.redstone_block, 'G', Items.gold_ingot, 'L', Blocks.glass_pane });
 			
 			// register recipes for RAM upgrades item,output,metadata
 			for (int i = 0; i < 8; i++) {
@@ -149,8 +137,8 @@ public class CommonProxy {
 		if (tablet) {
 			GameRegistry.addRecipe(new ItemStack(OCLights2.tablet, 2),
 					new Object[] { "GIG", "RMR", "GIG", 'I',
-							Item.ingotIron, 'R', Item.redstone, 'G',
-							Item.ingotGold, 'M', OCLights2.monitorBig });
+							Items.iron_ingot, 'R', Items.redstone, 'G',
+							Items.gold_ingot, 'M', OCLights2.monitorBig });
 		}
 	}
 	

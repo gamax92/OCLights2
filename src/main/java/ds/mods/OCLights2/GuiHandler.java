@@ -22,7 +22,7 @@ public class GuiHandler implements IGuiHandler {
 		switch (ID)
 		{
 		case 0:
-			TileEntity tile_entity = world.getBlockTileEntity(x, y, z);
+			TileEntity tile_entity = world.getTileEntity(x, y, z);
 			if(tile_entity instanceof TileEntityMonitor) {
 				return new GuiMonitor(((TileEntityMonitor) tile_entity));
 			}

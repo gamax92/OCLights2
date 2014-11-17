@@ -5,13 +5,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import org.apache.logging.log4j.Level;
+
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.prefab.AbstractValue;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -59,8 +60,8 @@ public class TileEntityMonitor extends TileEntity {
 			byte[] data = output.toByteArray();
 			nbt.setByteArray("texture", data);
 		} catch (IOException e) {
-			OCLights2.logger.log(Level.WARNING, "Failed to save monitor texture");
-			OCLights2.logger.log(Level.WARNING, e.getLocalizedMessage());
+			OCLights2.logger.log(Level.WARN, "Failed to save monitor texture");
+			OCLights2.logger.log(Level.WARN, e.getLocalizedMessage());
 		}
 	}
 
@@ -75,7 +76,7 @@ public class TileEntityMonitor extends TileEntity {
 			} catch (IOException e) {
 			}
 			if (img == null) {
-				OCLights2.logger.log(Level.WARNING, "Failed to load monitor texture");
+				OCLights2.logger.log(Level.WARN, "Failed to load monitor texture");
 			} else {
 				mon.tex.graphics.drawImage(img, 0, 0, null);
 			}

@@ -5,7 +5,7 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * TileEntities can implement the {@link li.cil.oc.api.network.SidedEnvironment}
@@ -44,7 +44,7 @@ public abstract class TileEntitySidedEnvironment extends TileEntity implements S
      *       // If you do not need energy remove this call.
      *       .withConnector()
      *       // This call marks the tile entity as a component. This means you
-     *       // can mark methods in it using the {@link li.cil.oc.api.network.Callback}
+     *       // can mark methods in it using the {@link li.cil.oc.api.machine.Callback}
      *       // annotation, making them callable from user code. The first
      *       // parameter is the name by which the component will be known in
      *       // the computer, in this case it could be accessed as
@@ -144,7 +144,7 @@ public abstract class TileEntitySidedEnvironment extends TileEntity implements S
             if (node != null && node.host() == this) {
                 final NBTTagCompound nodeNbt = new NBTTagCompound();
                 node.save(nodeNbt);
-                nbt.setCompoundTag("oc:node" + index, nodeNbt);
+                nbt.setTag("oc:node" + index, nodeNbt);
             }
             ++index;
         }

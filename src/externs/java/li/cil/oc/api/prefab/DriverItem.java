@@ -1,5 +1,6 @@
 package li.cil.oc.api.prefab;
 
+import li.cil.oc.api.driver.EnvironmentHost;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -45,14 +46,40 @@ public abstract class DriverItem implements li.cil.oc.api.driver.Item {
     @Override
     public NBTTagCompound dataTag(final ItemStack stack) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound("tag"));
+            stack.setTagCompound(new NBTTagCompound());
         }
         final NBTTagCompound nbt = stack.getTagCompound();
         // This is the suggested key under which to store item component data.
         // You are free to change this as you please.
         if (!nbt.hasKey("oc:data")) {
-            nbt.setCompoundTag("oc:data", new NBTTagCompound());
+            nbt.setTag("oc:data", new NBTTagCompound());
         }
         return nbt.getCompoundTag("oc:data");
+    }
+
+    // Convenience methods provided for HostAware drivers.
+
+    protected boolean isAdapter(Class<? extends EnvironmentHost> host) {
+        return li.cil.oc.api.internal.Adapter.class.isAssignableFrom(host);
+    }
+
+    protected boolean isComputer(Class<? extends EnvironmentHost> host) {
+        return li.cil.oc.api.internal.Case.class.isAssignableFrom(host);
+    }
+
+    protected boolean isRobot(Class<? extends EnvironmentHost> host) {
+        return li.cil.oc.api.internal.Robot.class.isAssignableFrom(host);
+    }
+
+    protected boolean isRotatable(Class<? extends EnvironmentHost> host) {
+        return li.cil.oc.api.internal.Rotatable.class.isAssignableFrom(host);
+    }
+
+    protected boolean isServer(Class<? extends EnvironmentHost> host) {
+        return li.cil.oc.api.internal.Server.class.isAssignableFrom(host);
+    }
+
+    protected boolean isTablet(Class<? extends EnvironmentHost> host) {
+        return li.cil.oc.api.internal.Tablet.class.isAssignableFrom(host);
     }
 }

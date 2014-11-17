@@ -2,6 +2,7 @@ package ds.mods.OCLights2.block;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -12,13 +13,13 @@ import ds.mods.OCLights2.block.tileentity.TileEntityAdvancedlight;
 
 public class BlockAdvancedLight extends BlockContainer
 {
-    public BlockAdvancedLight(int i, Material j)
+    public BlockAdvancedLight(Material j)
     {
-        super(i, j);
-        this.setLightValue(1.0F);
-        this.setUnlocalizedName("Advanced.Light");
+        super(j);
+        this.setLightLevel(1.0F);
+        this.setBlockName("Advanced.Light");
 		this.setCreativeTab(OCLights2.ocltab);
-		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
+		this.setHardness(0.6F).setStepSound(Block.soundTypeStone);
     }
     
     @Override
@@ -41,7 +42,7 @@ public class BlockAdvancedLight extends BlockContainer
 	}
 
     @Override
-	public TileEntity createNewTileEntity(World var1)
+	public TileEntity createNewTileEntity(World world, int metadata)
     {
         return new TileEntityAdvancedlight();
     }

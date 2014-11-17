@@ -2,9 +2,9 @@ package ds.mods.OCLights2.block.tileentity;
 
 import java.awt.Color;
 
-import li.cil.oc.api.network.Arguments;
-import li.cil.oc.api.network.Callback;
-import li.cil.oc.api.network.Context;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -179,7 +179,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements Simp
 	public TileEntityExternalMonitor getSimilarMonitorAt(int x, int y, int z) {
 		if ((y >= 0) && (y < this.worldObj.getHeight())) {
 			if (this.worldObj.getChunkProvider().chunkExists(x >> 4, z >> 4)) {
-				TileEntity tile = this.worldObj.getBlockTileEntity(x, y, z);
+				TileEntity tile = this.worldObj.getTileEntity(x, y, z);
 				if ((tile != null) && ((tile instanceof TileEntityExternalMonitor))) {
 					TileEntityExternalMonitor monitor = (TileEntityExternalMonitor) tile;
 					if ((monitor.getDir() == getDir())

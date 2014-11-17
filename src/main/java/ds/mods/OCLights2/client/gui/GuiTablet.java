@@ -42,7 +42,7 @@ public class GuiTablet extends GuiScreen {
 		if (nbt.getBoolean("canDisplay")) {
 			UUID trans = UUID.fromString(nbt.getString("trans"));
 			tile = (TileEntityTTrans) Minecraft.getMinecraft().theWorld
-					.getBlockTileEntity(
+					.getTileEntity(
 							(Integer) TabMesg.getTabVar(trans, "x"),
 							(Integer) TabMesg.getTabVar(trans, "y"),
 							(Integer) TabMesg.getTabVar(trans, "z"));

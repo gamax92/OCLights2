@@ -2,7 +2,7 @@ package ds.mods.OCLights2.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,16 +17,16 @@ import ds.mods.OCLights2.block.tileentity.TileEntityExternalMonitor;
 import ds.mods.OCLights2.gpu.GPU;
 
 public class BlockExternalMonitor extends Block {
-	public BlockExternalMonitor(int par1, Material par2Material) {
-		super(par1, par2Material);
-		this.setUnlocalizedName("monitor.big");
+	public BlockExternalMonitor(Material par2Material) {
+		super(par2Material);
+		this.setBlockName("monitor.big");
 		this.setCreativeTab(OCLights2.ocltab);
-		this.setHardness(0.6F).setStepSound(soundStoneFootstep);
+		this.setHardness(0.6F).setStepSound(Block.soundTypeStone);
 	}
 	
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6) {
-		TileEntityExternalMonitor tile = (TileEntityExternalMonitor) par1World.getBlockTileEntity(par2, par3, par4);
+	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
+		TileEntityExternalMonitor tile = (TileEntityExternalMonitor) par1World.getTileEntity(par2, par3, par4);
 		tile.destroy();
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
@@ -34,7 +34,7 @@ public class BlockExternalMonitor extends Block {
 	@Override
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float vecX,
 			float vecY, float vecZ) {
-		TileEntityExternalMonitor tile = (TileEntityExternalMonitor) world.getBlockTileEntity(par2,par3,par4);
+		TileEntityExternalMonitor tile = (TileEntityExternalMonitor) world.getTileEntity(par2,par3,par4);
 		float x = 0f;
 		float y = 0f;
 		switch (tile.m_dir)
@@ -133,7 +133,7 @@ public class BlockExternalMonitor extends Block {
 	{
 		if(!world.isRemote){
 		int l = MathHelper.floor_double(entityliving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-		TileEntityExternalMonitor tile = (TileEntityExternalMonitor) world.getBlockTileEntity(i, j, k);
+		TileEntityExternalMonitor tile = (TileEntityExternalMonitor) world.getTileEntity(i, j, k);
 		tile.setDir(l);
 		tile.contractNeighbours();
         tile.contract();
@@ -157,7 +157,7 @@ public class BlockExternalMonitor extends Block {
 	}
 	
 	 @Override
-	  public void registerIcons(IconRegister iconRegister) {
+	  public void registerBlockIcons(IIconRegister iconRegister) {
 	      blockIcon = iconRegister.registerIcon("oclights:monitorsides");
 	  }
 }

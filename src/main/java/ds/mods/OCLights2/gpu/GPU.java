@@ -490,7 +490,7 @@ public class GPU {
 	{
 		if (!drawlist.isEmpty())
 		{
-			if (!tile.worldObj.isRemote)
+			if (!tile.getWorldObj().isRemote)
 			{
 		    	PacketSenders.sendPacketsNow(drawlist,tile);
 			}

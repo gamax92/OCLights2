@@ -110,7 +110,7 @@ public class TileEntityExternalMonitorRenderer extends TileEntitySpecialRenderer
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory() {
+	public boolean shouldRender3DInInventory(int modelId) {
 		return true;
 	}
 

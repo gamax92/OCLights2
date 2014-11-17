@@ -1,8 +1,8 @@
 package ds.mods.OCLights2;
 
-import java.util.logging.Level;
+import org.apache.logging.log4j.Level;
 
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 public class Config {
 	public static boolean DEBUGS;
@@ -33,11 +33,11 @@ public class Config {
 			monitorSize = new Integer[] { Integer.decode(mParser[0]),Integer.decode(mParser[1]) };
 			if (monitorSize[0] < 1 || monitorSize[1] < 1) {
 				setDefaults();
-				OCLights2.logger.log(Level.WARNING,"Invalid monitor/externalmonitor size found, using defaults");
+				OCLights2.logger.log(Level.WARN,"Invalid monitor/externalmonitor size found, using defaults");
 			} 
 		}else {
 			setDefaults();
-			OCLights2.logger.log(Level.WARNING,"Invalid monitor/externalmonitor size found, using defaults");
+			OCLights2.logger.log(Level.WARN,"Invalid monitor/externalmonitor size found, using defaults");
 		}
 	}
 	

@@ -7,10 +7,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 
-import li.cil.oc.api.network.Context;
+import org.apache.logging.log4j.Level;
+
+import li.cil.oc.api.machine.Context;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
@@ -109,7 +110,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityMonitor mtile = (TileEntityMonitor) MinecraftServer.getServer().worldServers[playr.dimension].getBlockTileEntity(x, y, z);
+			TileEntityMonitor mtile = (TileEntityMonitor) MinecraftServer.getServer().worldServers[playr.dimension].getTileEntity(x, y, z);
 			if (mtile != null) {
 				int cmd = PacketData.readInt();
 				switch (cmd) {
@@ -152,7 +153,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityMonitor mtile = (TileEntityMonitor) MinecraftServer.getServer().worldServers[playr.dimension].getBlockTileEntity(x, y, z);
+			TileEntityMonitor mtile = (TileEntityMonitor) MinecraftServer.getServer().worldServers[playr.dimension].getTileEntity(x, y, z);
 			if (mtile != null) {
 				String event = PacketData.readUTF();
 				int len = PacketData.readInt();
@@ -191,7 +192,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityGPU tile = (TileEntityGPU) MinecraftServer.getServer().worldServers[playr.dimension].getBlockTileEntity(x, y, z);
+			TileEntityGPU tile = (TileEntityGPU) MinecraftServer.getServer().worldServers[playr.dimension].getTileEntity(x, y, z);
 			if (tile != null) {
 				PacketSenders.sendPacketToPlayer(x, y, z, tile, player);
 				for (int i1 = 0; i1 < tile.gpu.textures.length; i1++) {
@@ -209,7 +210,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int len = PacketData.readInt();
 			byte[] arr = new byte[len];
 			PacketData.readFully(arr);
-			TileEntityTTrans tile = (TileEntityTTrans) MinecraftServer.getServer().worldServers[playr.dimension].getBlockTileEntity(x, y, z);
+			TileEntityTTrans tile = (TileEntityTTrans) MinecraftServer.getServer().worldServers[playr.dimension].getTileEntity(x, y, z);
 			if (tile != null) {
 				HashMap<Double, Double> table = new HashMap<Double, Double>();
 				ByteArrayInputStream in = new ByteArrayInputStream(arr);
@@ -239,7 +240,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
+			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getTileEntity(x, y, z);
 			if (tile != null) {
 				int len = PacketData.readInt();
 				GPU gpu = tile.gpu;
@@ -269,7 +270,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 						}
 					else {
 						if (!thread.isAlive()) {
-							OCLights2.logger.log(Level.SEVERE, "The client draw thread died, restarting");
+							OCLights2.logger.log(Level.FATAL, "The client draw thread died, restarting");
 							thread = new ClientDrawThread();
 							thread.setName("OCLights2 Draw Thread");
 							thread.start();
@@ -287,7 +288,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
+			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getTileEntity(x, y, z);
 			if (tile == null)
 				return;
 			if (tile.gpu == null)
@@ -307,7 +308,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
+			TileEntityGPU tile = (TileEntityGPU) ClientProxy.getClientWorld().getTileEntity(x, y, z);
 			if (tile == null || tile.gpu == null)
 				return;
 			recTexture(PacketData, tile);
@@ -317,7 +318,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityExternalMonitor tile = (TileEntityExternalMonitor) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
+			TileEntityExternalMonitor tile = (TileEntityExternalMonitor) ClientProxy.getClientWorld().getTileEntity(x, y, z);
 			if (tile != null) {
 				tile.handleUpdatePacket(PacketData);
 			}
@@ -327,7 +328,7 @@ public class PacketHandler implements IPacketHandler, IConnectionHandler {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityAdvancedlight tile = (TileEntityAdvancedlight) ClientProxy.getClientWorld().getBlockTileEntity(x, y, z);
+			TileEntityAdvancedlight tile = (TileEntityAdvancedlight) ClientProxy.getClientWorld().getTileEntity(x, y, z);
 			if (tile != null) {
 				TileEntityAdvancedlight ntile = tile;
 				ntile.r = PacketData.readFloat();

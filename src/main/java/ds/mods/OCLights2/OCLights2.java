@@ -1,13 +1,13 @@
 package ds.mods.OCLights2;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -34,7 +34,12 @@ public class OCLights2 {
 		@Override
 		public ItemStack getIconItemStack() {
 			this.getTranslatedTabLabel();
-			return new ItemStack(tablet.itemID, 1, 0);
+			return new ItemStack(tablet, 1, 0);
+		}
+
+		@Override
+		public Item getTabIconItem() {
+			return tablet;
 		}
 	};
 
