@@ -8,17 +8,18 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.logging.log4j.Level;
-
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.prefab.AbstractValue;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+
+import org.apache.logging.log4j.Level;
+
 import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.gpu.GPU;
 import ds.mods.OCLights2.gpu.Monitor;
@@ -43,12 +44,12 @@ public class TileEntityMonitor extends TileEntity {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, worldObj.provider.dimensionId, nbt);
 	}
 
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		this.readFromNBT(pkt.data);
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.func_148857_g());
 	}
 
 	@Override

@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.zip.GZIPOutputStream;
 
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.network.Packet;
+import ds.mods.OCLights2.network.PacketHandler.PacketMessage;
 
 public class PacketChunker {
 
@@ -26,7 +26,7 @@ public class PacketChunker {
 	 * @return the list of chunks
 	 * @throws IOException
 	 */
-	public Packet[] createPackets(String channel, byte[] input) throws IOException {
+	public PacketMessage[] createPackets(String channel, byte[] input) throws IOException {
 		//gzip.jpg
 		ByteArrayOutputStream dataToCompress = new ByteArrayOutputStream();
 		GZIPOutputStream zipStream = new GZIPOutputStream(dataToCompress);
@@ -38,7 +38,7 @@ public class PacketChunker {
 		int start = 0;
 		short maxChunkSize = Short.MAX_VALUE - 100;
 		byte numChunks = (byte)Math.ceil(data.length / (double)maxChunkSize);
-		Packet[] packets = new Packet[numChunks];
+		PacketMessage[] packets = new PacketMessage[numChunks];
 		final byte META_LENGTH = 4;
 
 		for (byte i = 0; i < numChunks; i++) {
@@ -51,7 +51,7 @@ public class PacketChunker {
 
 			// set the chunk metadata: total number of chunks, current chunk
 			// index, packetId to match chunks together
-			chunk[0] = PacketHandler.NET_SPLITPACKET;
+			chunk[0] = PacketHandlerIMPL.NET_SPLITPACKET;
 			chunk[1] = numChunks;
 			chunk[2] = i;
 			chunk[3] = packetId;
@@ -59,10 +59,8 @@ public class PacketChunker {
 			// copy part of the data across
 			System.arraycopy(data, start, chunk, META_LENGTH, chunkSize);
 
-			Packet250CustomPayload packet = new Packet250CustomPayload();
-			packet.channel = channel;
+			PacketMessage packet = new PacketMessage();
 			packet.data = chunk;
-			packet.length = chunk.length;
 			packets[i] = packet;
 			start += chunkSize;
 		}
@@ -80,7 +78,7 @@ public class PacketChunker {
 	 * @return the full byte array
 	 * @throws IOException
 	 */
-	public byte[] getBytes(Packet250CustomPayload packet) throws IOException {
+	public byte[] getBytes(PacketMessage packet) throws IOException {
 
 		DataInputStream inputStream1 = new DataInputStream(new ByteArrayInputStream(packet.data));
 		inputStream1.skipBytes(1);

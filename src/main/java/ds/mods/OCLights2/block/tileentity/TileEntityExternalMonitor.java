@@ -7,7 +7,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -71,8 +71,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements Simp
 			int maxX = (minX == monitor.xCoord ? this.xCoord : monitor.xCoord) + 1;
 			int maxY = (minY == monitor.yCoord ? this.yCoord : monitor.yCoord) + 1;
 			int maxZ = (minZ == monitor.zCoord ? this.zCoord : monitor.zCoord) + 1;
-			return AxisAlignedBB.getAABBPool().getAABB(minX, minY, minZ, maxX,
-					maxY, maxZ);
+			return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
 		}
 
 		return OCLights2.monitorBig.getCollisionBoundingBoxFromPool(

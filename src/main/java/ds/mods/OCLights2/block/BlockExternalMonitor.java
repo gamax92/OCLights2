@@ -10,9 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.Player;
-import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.CommonProxy;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityExternalMonitor;
 import ds.mods.OCLights2.gpu.GPU;
 
@@ -103,8 +102,8 @@ public class BlockExternalMonitor extends Block {
 			{
 				for (GPU g : tile.mon.gpu)
 				{
-					g.tile.startClick((Player) par5EntityPlayer, 0, px, py);
-					g.tile.endClick((Player) par5EntityPlayer);
+					g.tile.startClick((EntityPlayer) par5EntityPlayer, 0, px, py);
+					g.tile.endClick((EntityPlayer) par5EntityPlayer);
 				}
 			}
 		}

@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.CommonProxy;
@@ -39,10 +38,10 @@ public class ClientProxy extends CommonProxy {
 
 		RenderingRegistry.registerBlockHandler(new TileEntityExternalMonitorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityExternalMonitor.class, new TileEntityExternalMonitorRenderer());
-		MinecraftForgeClient.registerItemRenderer(OCLights2.tablet.itemID,new TabletRenderer());
+		MinecraftForgeClient.registerItemRenderer(OCLights2.tablet, new TabletRenderer());
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedlight.class, new TileEntityLightRenderer());
 
-		TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
+		FMLCommonHandler.instance().bus().register(new ClientTickHandler());
 	}
 
 	@Override

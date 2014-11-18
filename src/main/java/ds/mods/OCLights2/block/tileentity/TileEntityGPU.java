@@ -29,9 +29,9 @@ import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -39,7 +39,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import ds.mods.OCLights2.CommandEnum;
 import ds.mods.OCLights2.OCLights2;
@@ -73,12 +72,12 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		node = Network.newNode(this, Visibility.Network).withComponent("ocl_gpu").create();
 	}
 
-	public void startClick(Player player, int button, int x, int y) {
+	public void startClick(EntityPlayer player, int button, int x, int y) {
 		int id = new Random().nextInt();
 		while (playerToClickMap.containsValue(id)) {
 			id = new Random().nextInt();
 		}
-		playerToClickMap.put(((EntityPlayer) player).username, id);
+		playerToClickMap.put(player.getDisplayName(), id);
 		clickToDataMap.put(id, new int[] { button, x, y });
 
 		String event = "monitor_down";
@@ -88,8 +87,8 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	public void moveClick(Player player, int nx, int ny) {
-		int id = playerToClickMap.get(((EntityPlayer) player).username);
+	public void moveClick(EntityPlayer player, int nx, int ny) {
+		int id = playerToClickMap.get(player.getDisplayName());
 		int[] data = clickToDataMap.get(id);
 		int button = data[0];
 		data[1] = nx;
@@ -102,8 +101,8 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		}
 	}
 
-	public void endClick(Player player) {
-		int id = playerToClickMap.get(((EntityPlayer) player).username);
+	public void endClick(EntityPlayer player) {
+		int id = playerToClickMap.get(player.getDisplayName());
 		int[] data = clickToDataMap.get(id);
 		int button = data[0];
 		int x = data[1];
@@ -114,7 +113,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		for (Context c : comp) {
 			c.signal(event, args);
 		}
-		playerToClickMap.remove(((EntityPlayer) player).username);
+		playerToClickMap.remove(player.getDisplayName());
 		clickToDataMap.remove(id);
 	}
 
@@ -688,12 +687,12 @@ public class TileEntityGPU extends TileEntity implements Environment {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, worldObj.provider.dimensionId, nbt);
 	}
 
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		this.readFromNBT(pkt.data);
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.func_148857_g());
 	}
 	
 	@Override
@@ -751,18 +750,19 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			gpu.maxmem = init;
 		}
 		NBTTagCompound textures = nbt.getCompoundTag("textures");
-		Iterator tagIterator = textures.getTags().iterator();
+		Iterator tagIterator = textures.func_150296_c().iterator();
 		while (tagIterator.hasNext()) {
-			NBTTagByteArray texture = (NBTTagByteArray) tagIterator.next();
-			int texid = Integer.parseInt(texture.getName());
+			String idString = (String) tagIterator.next();
+			byte[] texture = textures.getByteArray(idString);
+			int texid = Integer.parseInt(idString);
 			
 			BufferedImage img = null;
 			try {
-				img = ImageIO.read(new ByteArrayInputStream(texture.func_150292_c()));
+				img = ImageIO.read(new ByteArrayInputStream(texture));
 			} catch (IOException e) {
 			}
 			if (img == null) {
-				OCLights2.logger.log(Level.WARN, "Failed to load texture " + texture.getName());
+				OCLights2.logger.log(Level.WARN, "Failed to load texture " + idString);
 			} else {
 				gpu.textures[texid] = new Texture(img.getWidth(),img.getHeight());
 				gpu.textures[texid].graphics.drawImage(img, 0, 0, null);

@@ -1,18 +1,16 @@
 package ds.mods.OCLights2.client;
 
-import java.util.EnumSet;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import ds.mods.OCLights2.block.tileentity.TileEntityTTrans;
 
-public class ClientTickHandler implements ITickHandler {
+public class ClientTickHandler {
 	public static TileEntityTTrans tile; //Invoke screenshot when this is here
 
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) {
+	@SubscribeEvent
+	 public void onRenderTick(TickEvent.RenderTickEvent event) {
 		if (tile != null)
 		{
 			//get minecraft settings
@@ -32,16 +30,4 @@ public class ClientTickHandler implements ITickHandler {
 			tile = null;
 		}
 	}
-
-	@Override
-	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.RENDER);
-	}
-
-	@Override
-	public String getLabel() {
-		return "OCLights2 Render Tick Tracker";
-	}
-    
-	public void tickEnd(EnumSet<TickType> type, Object... tickData) {}
 }

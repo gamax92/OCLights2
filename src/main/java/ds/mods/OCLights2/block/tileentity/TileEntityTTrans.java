@@ -8,14 +8,14 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet132TileEntityData;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
-import ds.mods.OCLights2.converter.ConvertInteger;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.world.WorldServer;
 import ds.mods.OCLights2.gpu.GPU;
 import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.utils.TabMesg;
@@ -69,12 +69,12 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 		if (nbt.getString("uuid").length() > 0)
 		{
 			id = UUID.fromString(nbt.getString("uuid"));
-			NBTTagList lst = nbt.getTagList("tablets");
+			NBTTagList lst = nbt.getTagList("tablets", 8);
 			tablets.clear();
 			for (int i=0; i<lst.tagCount(); i++)
 			{
-				NBTTagString str = (NBTTagString) lst.tagAt(i);
-				tablets.add(UUID.fromString(str.func_150285_a_()));
+				String str = lst.getStringTagAt(i);
+				tablets.add(UUID.fromString(str));
 			}
 		}
 		update = true;
@@ -88,15 +88,22 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 		NBTTagList lst = new NBTTagList();
 		for (UUID t : tablets)
 		{
-			lst.appendTag(new NBTTagString("", t.toString()));
+			lst.appendTag(new NBTTagString(t.toString()));
 		}
 		nbt.setTag("tablets", lst);
 		update = true;
 	}
+	
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, worldObj.provider.dimensionId, nbt);
+	}
 
 	@Override
-	public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-		readFromNBT(pkt.data);
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.func_148857_g());
 	}
 
 	@Override
@@ -146,7 +153,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 					if (mon.gpu != null)
 						for (GPU g : mon.gpu)
 						{
-							g.tile.startClick((Player)args[0], (Integer)args[1], (Integer)args[2], (Integer)args[3]);
+							g.tile.startClick((EntityPlayer)args[0], (Integer)args[1], (Integer)args[2], (Integer)args[3]);
 						}
 			}
 			else if (msg.name.equals("moveClick"))
@@ -157,13 +164,13 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 					if (mon.gpu != null)
 						for (GPU g : mon.gpu)
 						{
-							g.tile.moveClick((Player)args[0], (Integer)args[1], (Integer)args[2]);
+							g.tile.moveClick((EntityPlayer)args[0], (Integer)args[1], (Integer)args[2]);
 						}
 			}
 			else if (msg.name.equals("endClick"))
 			{
 				UUID tab = (UUID) msg.a;
-				Player player = (Player) msg.b;
+				EntityPlayer player = (EntityPlayer) msg.b;
 				if (mon != null)
 					if (mon.gpu != null)
 						for (GPU g : mon.gpu)
@@ -175,13 +182,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 		
 		if (update && !worldObj.isRemote)
 		{
-			Packet132TileEntityData pkt = new Packet132TileEntityData();
-			pkt.data = new NBTTagCompound();
-			pkt.xPosition = xCoord;
-			pkt.yPosition = yCoord;
-			pkt.zPosition = zCoord;
-			writeToNBT(pkt.data);
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64, worldObj.provider.dimensionId, pkt);
+			((WorldServer)worldObj).getPlayerManager().markBlockForUpdate(xCoord, yCoord, zCoord);
 			update = false;
 		}
 	}

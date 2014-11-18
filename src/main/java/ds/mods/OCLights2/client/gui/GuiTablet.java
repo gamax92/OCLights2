@@ -64,7 +64,7 @@ public class GuiTablet extends GuiScreen {
 			oldScale = Minecraft.getMinecraft().gameSettings.guiScale;
 			Minecraft.getMinecraft().gameSettings.guiScale = 1;
 			ScaledResolution scaledresolution = new ScaledResolution(
-					this.mc.gameSettings, this.mc.displayWidth,
+					this.mc, this.mc.displayWidth,
 					this.mc.displayHeight);
 			this.width = scaledresolution.getScaledWidth();
 			this.height = scaledresolution.getScaledHeight();

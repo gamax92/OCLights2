@@ -7,14 +7,16 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.network.PacketChunker;
+import ds.mods.OCLights2.network.PacketHandler.PacketMessage;
+import ds.mods.OCLights2.network.PacketSenders;
 
 public class TileEntityAdvancedlight extends TileEntity implements SimpleComponent {
 	    public float r = 255;
@@ -59,8 +61,8 @@ public class TileEntityAdvancedlight extends TileEntity implements SimpleCompone
 	    		outputStream.writeFloat(this.r);
 	    		outputStream.writeFloat(this.g);
 	    		outputStream.writeFloat(this.b);
-	    	Packet[] packets = PacketChunker.instance.createPackets("OCLights2", outputStream.toByteArray());
-	    	PacketDispatcher.sendPacketToAllPlayers(packets[0]);
+	    		PacketMessage[] packets = PacketChunker.instance.createPackets("OCLights2", outputStream.toByteArray());
+	    		OCLights2.network.sendToAllAround(packets[0], new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, 4096.0D));
 	    	} catch (IOException ex) {
 	    		ex.printStackTrace();
 	    	}
