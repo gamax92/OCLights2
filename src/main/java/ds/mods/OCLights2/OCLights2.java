@@ -60,8 +60,8 @@ public class OCLights2 {
 	public void load(FMLPostInitializationEvent event) {
 		proxy.registerRenderInfo();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-        network.registerMessage(new PacketHandler(), PacketMessage.class, 0, Side.CLIENT);
-        network.registerMessage(new PacketHandler(), PacketMessage.class, 1, Side.SERVER);
+        network.registerMessage(PacketHandler.class, PacketMessage.class, 0, Side.CLIENT);
+        network.registerMessage(PacketHandler.class, PacketMessage.class, 1, Side.SERVER);
 	}
 
 	public static void debug(String debugmsg) {
