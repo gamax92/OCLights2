@@ -18,7 +18,7 @@ import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.network.PacketSenders;
 
-public class TileEntityExternalMonitor extends TileEntityMonitor implements SimpleComponent {
+public class TileEntityExternalMonitor extends TileEntityMonitor {
 	public static final int MAX_WIDTH = 16;
 	public static final int MAX_HEIGHT = 9;
 	public static final int TICKS_TIL_SYNC = 20 * 600;
@@ -40,6 +40,11 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements Simp
 		mon.tex.fill(Color.black);
 	}
 
+	@Override
+	public MonitorObject getMonitorObject() {
+		return new ExternalMonitorObject();
+	}
+	
 	public void destroy() {
 		if (!this.m_destroyed) {
 			this.m_destroyed = true;
@@ -461,27 +466,15 @@ public class TileEntityExternalMonitor extends TileEntityMonitor implements Simp
 		propogateTerminal();
 	}
 
-	@Callback(direct=true)
-	public Object[] getResolution(Context context, Arguments arguments) {
-		return new Object[]{mon.getWidth(),mon.getHeight()};
+	public class ExternalMonitorObject extends MonitorObject {
+		@Callback(direct=true)
+		public Object[] getDPM(Context context, Arguments arguments) {
+			return new Object[]{32};
+		}
+		
+		@Callback(direct=true)
+		public Object[] getBlockResolution(Context context, Arguments arguments) {
+			return new Object[]{m_width,m_height};
+		}
 	}
-
-	@Callback(direct=true)
-	public Object[] getDPM(Context context, Arguments arguments) {
-		return new Object[]{32};
-	}
-	
-	@Callback(direct=true)
-	public Object[] getBlockResolution(Context context, Arguments arguments) {
-		return new Object[]{m_width,m_height};
-	}
-	
-	@Override
-	public String getComponentName() {return "monitor";}
-
-	/* @Override
-	public boolean equals(SimpleComponent other) {
-		if(other.getComponentName() == getComponentName()){return true;}
-		else return false;
-	} */
 }
