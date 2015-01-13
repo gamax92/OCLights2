@@ -27,7 +27,6 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -315,6 +314,70 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			DrawCMD cmd = new DrawCMD();
 			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3) };
 			cmd.cmd = CommandEnum.FilledRectangle;
+			cmd.args = nargs;
+			gpu.processCommand(cmd);
+			gpu.drawlist.push(cmd);
+		} else {
+			throw new Exception("filledRectangle: Argument Error: x, y, width, height expected");
+		}
+		return null;
+	}
+	
+	@Callback(direct=true)
+	public Object[] triangle(Context context, Arguments args) throws Exception {
+		//triangle
+		if (args.count() > 5) {
+			DrawCMD cmd = new DrawCMD();
+			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3), args.checkInteger(4), args.checkInteger(5) };
+			cmd.cmd = CommandEnum.Triangle;
+			cmd.args = nargs;
+			gpu.processCommand(cmd);
+			gpu.drawlist.push(cmd);
+		} else {
+			throw new Exception("rectangle: Argument Error: x1, y1, x2, y2, x3, y3 expected");
+		}
+		return null;
+	}
+
+	@Callback(direct=true)
+	public Object[] filledTriangle(Context context, Arguments args) throws Exception {
+		//filledtriangle
+		if (args.count() > 5) {
+			DrawCMD cmd = new DrawCMD();
+			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3), args.checkInteger(4), args.checkInteger(5) };
+			cmd.cmd = CommandEnum.FilledTriangle;
+			cmd.args = nargs;
+			gpu.processCommand(cmd);
+			gpu.drawlist.push(cmd);
+		} else {
+			throw new Exception("filledRectangle: Argument Error: x1, y1, x2, y2, x3, y3 expected");
+		}
+		return null;
+	}
+	
+	@Callback(direct=true)
+	public Object[] oval(Context context, Arguments args) throws Exception {
+		//oval
+		if (args.count() > 3) {
+			DrawCMD cmd = new DrawCMD();
+			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3) };
+			cmd.cmd = CommandEnum.Oval;
+			cmd.args = nargs;
+			gpu.processCommand(cmd);
+			gpu.drawlist.push(cmd);
+		} else {
+			throw new Exception("rectangle: Argument Error: x, y, width, height expected");
+		}
+		return null;
+	}
+
+	@Callback(direct=true)
+	public Object[] filledOval(Context context, Arguments args) throws Exception {
+		//filledoval
+		if (args.count() > 3) {
+			DrawCMD cmd = new DrawCMD();
+			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3) };
+			cmd.cmd = CommandEnum.FilledOval;
 			cmd.args = nargs;
 			gpu.processCommand(cmd);
 			gpu.drawlist.push(cmd);

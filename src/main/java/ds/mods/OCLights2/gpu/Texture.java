@@ -220,7 +220,79 @@ public class Texture {
 	}
 	
 	/**
-	 * draw a line from point x1,y1 into x2,y2
+	 * Draws an filled triangle from points (x1,y1), (x2,y2), and (x3,y3)
+	 * @param c
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param x3
+	 * @param y3
+	 */
+	public void filledTriangle(Color c, int x1, int y1, int x2, int y2, int x3, int y3)
+	{
+		graphics.setTransform(transform);
+		graphics.setColor(c);
+		int[] x = {x1,x2,x3};
+		int[] y = {y1,y2,y3};
+		graphics.fillPolygon(x,y,3);
+		graphics.setTransform(resetTransform);
+	}
+	
+	/**
+	 * Draws an outlined triangle from points (x1,y1), (x2,y2), and (x3,y3)
+	 * @param c
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @param x3
+	 * @param y3
+	 */
+	public void triangle(Color c, int x1, int y1, int x2, int y2, int x3, int y3)
+	{
+		graphics.setTransform(transform);
+		graphics.setColor(c);
+		int[] x = {x1,x2,x3};
+		int[] y = {y1,y2,y3};
+		graphics.drawPolygon(x,y,3);
+		graphics.setTransform(resetTransform);
+	}
+	
+	/**
+	 * Creates a filled ellipse at x and y with a width and height of w and h
+	 * @param c
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 */
+	public void filledOval(Color c, int x, int y, int w, int h)
+	{
+		graphics.setTransform(transform);
+		graphics.setColor(c);
+		graphics.fillOval(x+(w/2), y+(h/2), w, h);
+		graphics.setTransform(resetTransform);
+	}
+	
+	/**
+	 * Creates a outlined ellipse at x and y with a width and height of w and h
+	 * @param c
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 */
+	public void oval(Color c, int x, int y, int w, int h)
+	{
+		graphics.setTransform(transform);
+		graphics.setColor(c);
+		graphics.drawOval(x+(w/2), y+(h/2), w, h);
+		graphics.setTransform(resetTransform);
+	}
+	
+	/**
+	 * Draws a line from point x1,y1 to x2,y2
 	 * @param c
 	 * @param x1
 	 * @param y1

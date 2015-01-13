@@ -16,7 +16,6 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.network.PacketChunker;
 import ds.mods.OCLights2.network.PacketHandler.PacketMessage;
-import ds.mods.OCLights2.network.PacketSenders;
 
 public class TileEntityAdvancedlight extends TileEntity implements SimpleComponent {
 	    public float r = 255;

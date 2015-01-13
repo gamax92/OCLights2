@@ -7,8 +7,8 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.CommonProxy;
+import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityAdvancedlight;
 
 public class BlockAdvancedLight extends BlockContainer

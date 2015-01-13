@@ -1,8 +1,8 @@
 package ds.mods.OCLights2;
 
-import org.apache.logging.log4j.Level;
-
 import net.minecraftforge.common.config.Configuration;
+
+import org.apache.logging.log4j.Level;
 
 public class Config {
 	public static boolean DEBUGS;

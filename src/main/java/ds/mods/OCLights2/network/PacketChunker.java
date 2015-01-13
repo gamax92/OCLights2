@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.zip.GZIPOutputStream;
 
-import net.minecraft.network.Packet;
 import ds.mods.OCLights2.network.PacketHandler.PacketMessage;
 
 public class PacketChunker {

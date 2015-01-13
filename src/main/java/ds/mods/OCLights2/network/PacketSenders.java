@@ -18,7 +18,6 @@ import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.Packet;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;

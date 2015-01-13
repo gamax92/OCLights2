@@ -5,8 +5,6 @@ import java.awt.Color;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.SimpleComponent;
-import li.cil.oc.api.prefab.AbstractValue;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +14,6 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLLog;
 import ds.mods.OCLights2.OCLights2;
-import ds.mods.OCLights2.block.tileentity.TileEntityMonitor.MonitorObject;
 import ds.mods.OCLights2.gpu.Monitor;
 import ds.mods.OCLights2.network.PacketSenders;
 
