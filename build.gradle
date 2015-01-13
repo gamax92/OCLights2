@@ -20,11 +20,11 @@ apply plugin: 'forge'
 if (System.getenv().BUILD_NUMBER != null)
 	ext.buildNumber = System.getenv().BUILD_NUMBER?.toInteger()
 else
-	ext.buildNumber = 0
+	ext.buildNumber = 2
 
 version = "0.4.1"
 group = "ds.mods.OCLights2"
-archivesBaseName = "OCLights2"
+archivesBaseName = "OCLights2-1.7.10"
 
 minecraft {
 	version = "1.7.10-10.13.0.1208"
