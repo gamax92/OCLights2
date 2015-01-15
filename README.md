@@ -2,7 +2,7 @@ OCLights 2 is a Open Source Minecraft mod that adds a Peripheral for OpenCompute
 
 [Download 1.6.4 (OC 1.3)](https://dl.dropboxusercontent.com/u/93572794/Mods/OCLights2-1.6.4-0.4.1.1.jar)
 
-[Download 1.7.10 (OC 1.4)](https://dl.dropboxusercontent.com/u/93572794/Mods/OCLights2-1.7.10-0.4.1.2.jar)
+[Download 1.7.10 (OC 1.4)](https://dl.dropboxusercontent.com/u/93572794/Mods/OCLights2-1.7.10-0.4.2.jar)
 
 TODO:
 -  Make Network code more efficent (Note: This should never be checked off, because the network code always needs to be more efficent)
