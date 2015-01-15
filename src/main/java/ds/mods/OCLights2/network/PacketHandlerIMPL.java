@@ -99,13 +99,12 @@ public class PacketHandlerIMPL {
 	}
 
 	public static void ServerSide(byte typ, ByteArrayDataInput PacketData, EntityPlayer player) {
-		EntityPlayerMP playr = (EntityPlayerMP) player;
 		switch (typ) {
 		case (NET_GPUMOUSE): {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityMonitor mtile = (TileEntityMonitor) MinecraftServer.getServer().worldServers[playr.dimension].getTileEntity(x, y, z);
+			TileEntityMonitor mtile = (TileEntityMonitor) player.worldObj.getTileEntity(x, y, z);
 			if (mtile != null) {
 				int cmd = PacketData.readInt();
 				switch (cmd) {
@@ -148,7 +147,7 @@ public class PacketHandlerIMPL {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityMonitor mtile = (TileEntityMonitor) MinecraftServer.getServer().worldServers[playr.dimension].getTileEntity(x, y, z);
+			TileEntityMonitor mtile = (TileEntityMonitor) player.worldObj.getTileEntity(x, y, z);
 			if (mtile != null) {
 				String event = PacketData.readUTF();
 				int len = PacketData.readInt();
@@ -187,7 +186,7 @@ public class PacketHandlerIMPL {
 			int x = PacketData.readInt();
 			int y = PacketData.readInt();
 			int z = PacketData.readInt();
-			TileEntityGPU tile = (TileEntityGPU) MinecraftServer.getServer().worldServers[playr.dimension].getTileEntity(x, y, z);
+			TileEntityGPU tile = (TileEntityGPU) player.worldObj.getTileEntity(x, y, z);
 			if (tile != null) {
 				PacketSenders.sendPacketToPlayer(x, y, z, tile, player);
 				for (int i1 = 0; i1 < tile.gpu.textures.length; i1++) {
@@ -205,7 +204,7 @@ public class PacketHandlerIMPL {
 			int len = PacketData.readInt();
 			byte[] arr = new byte[len];
 			PacketData.readFully(arr);
-			TileEntityTTrans tile = (TileEntityTTrans) MinecraftServer.getServer().worldServers[playr.dimension].getTileEntity(x, y, z);
+			TileEntityTTrans tile = (TileEntityTTrans) player.worldObj.getTileEntity(x, y, z);
 			if (tile != null) {
 				HashMap<Double, Double> table = new HashMap<Double, Double>();
 				ByteArrayInputStream in = new ByteArrayInputStream(arr);
