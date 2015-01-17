@@ -6,7 +6,9 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -15,6 +17,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.FMLLog;
 import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.gpu.Monitor;
+import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.network.PacketSenders;
 
 public class TileEntityExternalMonitor extends TileEntityMonitor {
@@ -42,6 +45,40 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 	@Override
 	public MonitorObject getMonitorObject() {
 		return new ExternalMonitorObject();
+	}
+	
+	@Override
+	public Packet getDescriptionPacket() {
+		dirty = true;
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, worldObj.provider.dimensionId, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.func_148857_g());
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
+		nbt.setInteger("xIndex", this.m_xIndex);
+		nbt.setInteger("yIndex", this.m_yIndex);
+		nbt.setInteger("width", this.m_width);
+		nbt.setInteger("height", this.m_height);
+		nbt.setInteger("dir", this.m_dir);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		this.m_xIndex = nbt.getInteger("xIndex");
+		this.m_yIndex = nbt.getInteger("yIndex");
+		this.m_width = nbt.getInteger("width");
+		this.m_height = nbt.getInteger("height");
+		this.m_dir = nbt.getInteger("dir");
+		dirty = true;
 	}
 	
 	public void destroy() {
@@ -82,27 +119,6 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 				this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 	}
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound) {
-		super.writeToNBT(nbttagcompound);
-		nbttagcompound.setInteger("xIndex", this.m_xIndex);
-		nbttagcompound.setInteger("yIndex", this.m_yIndex);
-		nbttagcompound.setInteger("width", this.m_width);
-		nbttagcompound.setInteger("height", this.m_height);
-		nbttagcompound.setInteger("dir", this.m_dir);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound) {
-		super.readFromNBT(nbttagcompound);
-		this.m_xIndex = nbttagcompound.getInteger("xIndex");
-		this.m_yIndex = nbttagcompound.getInteger("yIndex");
-		this.m_width = nbttagcompound.getInteger("width");
-		this.m_height = nbttagcompound.getInteger("height");
-		this.m_dir = nbttagcompound.getInteger("dir");
-		dirty = true;
-	}
-
 	public void rebuildTerminal(Monitor copyFrom) {
 		int termWidth = this.m_width * 32;
 		int termHeight = this.m_height * 32;
@@ -111,17 +127,18 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 		propogateTerminal();
 	}
 
-	@Override
-	public Packet getDescriptionPacket() {
-		dirty = true;
-		return null;
-	}
-
 	public void propogateTerminal() {
 		if (origin() == null) return;
 		Monitor originTerminal = origin().mon;
+		Texture old = new Texture(originTerminal.tex.getWidth(), originTerminal.tex.getHeight());
+		old.drawTexture(originTerminal.tex, 0, 0, Color.white);
 		originTerminal.removeAllGPUs();
-		originTerminal = new Monitor(m_width * 32, m_height * 32, getMonitorObject());
+		if (originTerminal.getWidth() != m_width * 32 || originTerminal.getHeight() != m_height * 32) {
+			originTerminal = new Monitor(m_width * 32, m_height * 32, getMonitorObject());
+		} else {
+			originTerminal.tex.drawTexture(old, 0, 0, Color.white);
+			originTerminal.tex.texUpdate();	
+		}
 		origin().mon = originTerminal;
 		for (int y = 0; y < this.m_height; y++) {
 			for (int x = 0; x < this.m_width; x++) {
