@@ -187,7 +187,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 
 	@Callback(direct=true)
 	public Object[] plot(Context context, Arguments args) throws Exception {
-		//was plot and setColorRGB is now plot
+		//plot
 		if (args.count() >= 2) {
 			int x = args.checkInteger(0);
 			int y = args.checkInteger(1);
@@ -273,7 +273,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			tex = args.checkInteger(0);
 		}
 		if (gpu.textures[tex] == null)
-			throw new Exception("getMonitorSize: texture does not exist");
+			throw new Exception("getSize: texture does not exist");
 		Texture texture = gpu.textures[tex];
 		return new Object[] { texture.getWidth(), texture.getHeight() };
 	}
@@ -309,7 +309,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 
 	@Callback(direct=true)
 	public Object[] filledRectangle(Context context, Arguments args) throws Exception {
-		//filledrectangle
+		//filledRectangle
 		if (args.count() > 3) {
 			DrawCMD cmd = new DrawCMD();
 			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3) };
@@ -334,14 +334,14 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			gpu.processCommand(cmd);
 			gpu.drawlist.push(cmd);
 		} else {
-			throw new Exception("rectangle: Argument Error: x1, y1, x2, y2, x3, y3 expected");
+			throw new Exception("triangle: Argument Error: x1, y1, x2, y2, x3, y3 expected");
 		}
 		return null;
 	}
 
 	@Callback(direct=true)
 	public Object[] filledTriangle(Context context, Arguments args) throws Exception {
-		//filledtriangle
+		//filledTriangle
 		if (args.count() > 5) {
 			DrawCMD cmd = new DrawCMD();
 			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3), args.checkInteger(4), args.checkInteger(5) };
@@ -350,7 +350,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			gpu.processCommand(cmd);
 			gpu.drawlist.push(cmd);
 		} else {
-			throw new Exception("filledRectangle: Argument Error: x1, y1, x2, y2, x3, y3 expected");
+			throw new Exception("filledTriangle: Argument Error: x1, y1, x2, y2, x3, y3 expected");
 		}
 		return null;
 	}
@@ -366,14 +366,14 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			gpu.processCommand(cmd);
 			gpu.drawlist.push(cmd);
 		} else {
-			throw new Exception("rectangle: Argument Error: x, y, width, height expected");
+			throw new Exception("oval: Argument Error: x, y, width, height expected");
 		}
 		return null;
 	}
 
 	@Callback(direct=true)
 	public Object[] filledOval(Context context, Arguments args) throws Exception {
-		//filledoval
+		//filledOval
 		if (args.count() > 3) {
 			DrawCMD cmd = new DrawCMD();
 			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3) };
@@ -382,7 +382,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			gpu.processCommand(cmd);
 			gpu.drawlist.push(cmd);
 		} else {
-			throw new Exception("filledRectangle: Argument Error: x, y, width, height expected");
+			throw new Exception("filledOval: Argument Error: x, y, width, height expected");
 		}
 		return null;
 	}
@@ -397,7 +397,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 	public Object[] setPixels(Context context, Arguments args) throws Exception {
 		//setPixels
 		if (args.count() < 4) {
-			throw new Exception("setPixelsRaw: Argument Error: w, h, x, y, {[r,g,b,a]}... expected");
+			throw new Exception("setPixels: Argument Error: w, h, x, y, {[r,g,b,a]}... expected");
 		} else {
 			int w = args.checkInteger(0);
 			int h = args.checkInteger(1);
@@ -423,7 +423,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 
 	@Callback(direct=true)
 	public Object[] flipVertically(Context context, Arguments args) throws Exception {
-		//flipTextureV
+		//flipVertically
 		if (args.count() > 0) {
 			DrawCMD cmd = new DrawCMD();
 			Object[] nargs = new Object[] { args.checkInteger(0) };
@@ -433,7 +433,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			gpu.drawlist.push(cmd);
 			return ret;
 		} else {
-			throw new Exception("Number expected.");
+			throw new Exception("flipVertically: Argument Error: textureid expected");
 		}
 	}
 
@@ -456,16 +456,16 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			String address = args.checkString(0);
 			Node testNode = node.network().node(address);
 			if (testNode == null)
-				throw new Exception("No such component");
+				throw new Exception("import: No such component");
 			else if (!testNode.canBeReachedFrom(node))
-				throw new Exception("Cannot reach component");
+				throw new Exception("import: Cannot reach component");
 			String path = args.checkString(1);
 			File cleanPath = new File("/",path);
 			File f = new File(OCLights2.proxy.getWorldDir(worldObj), "opencomputers" + File.separatorChar + address + File.separatorChar + cleanPath.getCanonicalPath());
 			if (!f.exists())
-				throw new Exception("No such file");
+				throw new Exception("import: No such file");
 			else if (f.isDirectory())
-				throw new Exception("Cannot import a directory");
+				throw new Exception("import: Cannot import a directory");
 			data = Convert.toByte(FileUtils.readFileToByteArray(f));
 		} else {
 			throw new Exception("import: Argument Error: (filedata or address, path) expected");
@@ -490,7 +490,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			int texid = args.checkInteger(0);
 			String format = args.checkString(1);
 			if (texid < 0 || texid > gpu.textures.length || gpu.textures[texid] == null) {
-				throw new Exception("Texture does not exist.");
+				throw new Exception("export: Texture does not exist.");
 			}
 			Texture tex = gpu.textures[texid];
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -508,7 +508,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 
 	@Callback(direct=true)
 	public Object[] drawText(Context context, Arguments args) throws Exception {
-		//Drawtext
+		//drawText
 		if (args.count() > 2) {
 			String str = args.checkString(0);
 			int x = args.checkInteger(1);
@@ -702,7 +702,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 
 	@Callback(direct=true)
 	public Object[] clearRectangle(Context context, Arguments args) throws Exception {
-		//clearRect
+		//clearRectangle
 		if (args.count() >= 4) {
 			DrawCMD cmd = new DrawCMD();
 			Object[] nargs = new Object[] { args.checkInteger(0), args.checkInteger(1), args.checkInteger(2), args.checkInteger(3) };
@@ -712,7 +712,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			gpu.drawlist.push(cmd);
 			return ret;
 		} else {
-			throw new Exception("clearRect: Argument Error: x, y, width, height expected");
+			throw new Exception("clearRectangle: Argument Error: x, y, width, height expected");
 		}
 	}
 
