@@ -271,7 +271,7 @@ public class Texture {
 	{
 		graphics.setTransform(transform);
 		graphics.setColor(c);
-		graphics.fillOval(x+(w/2), y+(h/2), w, h);
+		graphics.fillOval(x-(w/2), y-(h/2), w, h);
 		graphics.setTransform(resetTransform);
 	}
 	
@@ -287,7 +287,7 @@ public class Texture {
 	{
 		graphics.setTransform(transform);
 		graphics.setColor(c);
-		graphics.drawOval(x+(w/2), y+(h/2), w, h);
+		graphics.drawOval(x-(w/2), y-(h/2), w, h);
 		graphics.setTransform(resetTransform);
 	}
 	
