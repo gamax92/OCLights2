@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.Side;
 import ds.mods.OCLights2.network.PacketHandler;
 import ds.mods.OCLights2.network.PacketHandler.PacketMessage;
 
-@Mod(modid = "OCLights2", name = "OCLights2", version = "0.4.1-75",dependencies="required-after:OpenComputers",acceptedMinecraftVersions = "1.7.10")
+@Mod(modid = "OCLights2", name = "OCLights2", version = "0.4.5",dependencies="required-after:OpenComputers",acceptedMinecraftVersions = "1.7.10")
 public class OCLights2 {
 	@Mod.Instance("OCLights2")
 	public static OCLights2 instance;

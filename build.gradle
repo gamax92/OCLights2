@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.4.4"
+version = "0.4.5"
 group = "ds.mods.OCLights2"
 archivesBaseName = "OCLights2-1.7.10"
 
@@ -29,12 +29,12 @@ repositories {
 }
 
 minecraft {
-    version = "1.7.10-10.13.0.1208"
-    assetDir = "eclipse/assets"
+    version = "1.7.10-10.13.2.1291"
+    runDir = "eclipse"
 }
 
 dependencies {
-    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.4.330-dev:dev"
+    compile "li.cil.oc:OpenComputers:MC1.7.10-1.5.7.518-dev:dev"
 }
 
 processResources
