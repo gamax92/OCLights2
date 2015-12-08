@@ -597,7 +597,7 @@ public class Texture {
 	{
 		if (rgbCache != null)
 		{
-			img.getRGB(0, 0, width, height, rgbCache, 0, 16*32);
+			img.getRGB(0, 0, width, height, rgbCache, 0, width);
 		}
 	}
 }

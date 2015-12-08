@@ -306,11 +306,20 @@ public final class PacketSenders {
 		OCLights2.network.sendToServer(packet);
 	}
 
-	public static void SYNC(int monitorWidth, int monitorHeight,EntityPlayer player) {
+	public static void SYNC(int widthMon, int heightMon,
+							int widthTab, int heightTab,
+							int widthExt, int heightExt, int resExt, EntityPlayer player) {
 		ByteArrayDataOutput outputStream = ByteStreams.newDataOutput();
 		outputStream.writeByte(PacketHandlerIMPL.NET_SYNC);
-		outputStream.writeShort(monitorWidth);
-		outputStream.writeShort(monitorHeight);
+
+		outputStream.writeShort(widthMon);
+		outputStream.writeShort(heightMon);
+		outputStream.writeShort(widthTab);
+		outputStream.writeShort(heightTab);
+		outputStream.writeShort(widthExt);
+		outputStream.writeShort(heightExt);
+		outputStream.writeShort(resExt);
+
 		PacketMessage packet = new PacketMessage();
 		packet.data = outputStream.toByteArray();
 		OCLights2.network.sendTo(packet, (EntityPlayerMP)player);

@@ -3,10 +3,12 @@ package ds.mods.OCLights2.gpu;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import ds.mods.OCLights2.Config;
 import ds.mods.OCLights2.OCLights2;
 import ds.mods.OCLights2.block.tileentity.TileEntityMonitor.MonitorObject;
 
 public class Monitor {
+
 	public ArrayList<GPU> gpu = new ArrayList<GPU>();
 	public Texture tex;
 	
@@ -23,7 +25,7 @@ public class Monitor {
 		width = w;
 		height = h;
 		tex = new Texture(w, h);
-		tex.rgbCache = new int[16*32*9*32];
+		tex.rgbCache = new int[width*height];
 		tex.fill(Color.black);
 		tex.texUpdate();
 		obj = o;
@@ -38,7 +40,7 @@ public class Monitor {
 		width = w;
 		height = h;
 		tex.resize(w, h);
-		tex.rgbCache = new int[16*32*9*32];
+		tex.rgbCache = new int[width*height];
 		tex.fill(Color.black);
 		tex.texUpdate();
 		OCLights2.debug("Resized to: "+w+","+h);

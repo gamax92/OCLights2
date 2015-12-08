@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import ds.mods.OCLights2.Config;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -22,6 +23,10 @@ import ds.mods.OCLights2.utils.TabMesg;
 import ds.mods.OCLights2.utils.TabMesg.Message;
 
 public class TileEntityTTrans extends TileEntityMonitor implements SimpleComponent {
+
+	private static final int WIDTH = Config.widthTab;
+	private static final int HEIGHT = Config.heightTab;
+
 	public UUID id = UUID.randomUUID();
 	public ArrayList<UUID> tablets = new ArrayList<UUID>();
 	
@@ -29,7 +34,7 @@ public class TileEntityTTrans extends TileEntityMonitor implements SimpleCompone
 	
 	public TileEntityTTrans()
 	{
-		mon = new Monitor(16*32,9*32,getMonitorObject());
+		mon = new Monitor(WIDTH,HEIGHT,getMonitorObject());
 		mon.tex.fill(Color.black);
 		mon.tex.drawText("Tablet connected", 0, 0, Color.white);
 		mon.tex.texUpdate();

@@ -2,6 +2,7 @@ package ds.mods.OCLights2.block.tileentity;
 
 import java.awt.Color;
 
+import ds.mods.OCLights2.Config;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -21,8 +22,9 @@ import ds.mods.OCLights2.gpu.Texture;
 import ds.mods.OCLights2.network.PacketSenders;
 
 public class TileEntityExternalMonitor extends TileEntityMonitor {
-	public static final int MAX_WIDTH = 16;
-	public static final int MAX_HEIGHT = 9;
+	private static final int WIDTH = Config.widthExt;
+	private static final int HEIGHT = Config.heightExt;
+	private static final int RES = Config.resExt;
 	public static final int TICKS_TIL_SYNC = 20 * 600;
 	public boolean dirty = false;
 	public boolean m_destroyed = false;
@@ -38,7 +40,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 	public Monitor m_originMonitor;
 
 	public TileEntityExternalMonitor() {
-		mon = new Monitor(32, 32, getMonitorObject());
+		mon = new Monitor(RES, RES, getMonitorObject());
 		mon.tex.fill(Color.black);
 	}
 
@@ -120,8 +122,8 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 	}
 
 	public void rebuildTerminal(Monitor copyFrom) {
-		int termWidth = this.m_width * 32;
-		int termHeight = this.m_height * 32;
+		int termWidth = this.m_width * RES;
+		int termHeight = this.m_height * RES;
 		this.mon.resize(termWidth, termHeight);
 		this.mon.removeAllGPUs();
 		propogateTerminal();
@@ -133,8 +135,8 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 		Texture old = new Texture(originTerminal.tex.getWidth(), originTerminal.tex.getHeight());
 		old.drawTexture(originTerminal.tex, 0, 0, Color.white);
 		originTerminal.removeAllGPUs();
-		if (originTerminal.getWidth() != m_width * 32 || originTerminal.getHeight() != m_height * 32) {
-			originTerminal = new Monitor(m_width * 32, m_height * 32, getMonitorObject());
+		if (originTerminal.getWidth() != m_width * RES || originTerminal.getHeight() != m_height * RES) {
+			originTerminal = new Monitor(m_width * RES, m_height * RES, getMonitorObject());
 		} else {
 			originTerminal.tex.drawTexture(old, 0, 0, Color.white);
 			originTerminal.tex.texUpdate();	
@@ -217,7 +219,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 		int right = getRight();
 		int xOffset = -this.m_xIndex + x;
 		return getSimilarMonitorAt(this.xCoord
-				+ net.minecraft.util.Facing.offsetsXForSide[right] * xOffset,
+						+ net.minecraft.util.Facing.offsetsXForSide[right] * xOffset,
 				this.yCoord - this.m_yIndex + y, this.zCoord
 						+ net.minecraft.util.Facing.offsetsZForSide[right]
 						* xOffset);
@@ -279,7 +281,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 		if ((left != null) && (left.m_yIndex == 0)
 				&& (left.m_height == this.m_height)) {
 			int width = left.m_width + this.m_width;
-			if (width <= 16) {
+			if (width <= WIDTH) {
 				left.origin().resize(width, this.m_height);
 				left.expand();
 				return true;
@@ -293,7 +295,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 		if ((right != null) && (right.m_yIndex == 0)
 				&& (right.m_height == this.m_height)) {
 			int width = this.m_width + right.m_width;
-			if (width <= 16) {
+			if (width <= WIDTH) {
 				origin().resize(width, this.m_height);
 				expand();
 				return true;
@@ -307,7 +309,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 		if ((above != null) && (above.m_xIndex == 0)
 				&& (above.m_width == this.m_width)) {
 			int height = above.m_height + this.m_height;
-			if (height <= 9) {
+			if (height <= HEIGHT) {
 				origin().resize(this.m_width, height);
 				expand();
 				return true;
@@ -321,7 +323,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 		if ((below != null) && (below.m_xIndex == 0)
 				&& (below.m_width == this.m_width)) {
 			int height = this.m_height + below.m_height;
-			if (height <= 9) {
+			if (height <= HEIGHT) {
 				below.origin().resize(this.m_width, height);
 				below.expand();
 				return true;
@@ -402,7 +404,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 				below.expand();
 			}
 			mon.removeAllGPUs();
-			mon = new Monitor(32, 32, getMonitorObject());
+			mon = new Monitor(RES, RES, getMonitorObject());
 			return;
 		}
 
@@ -423,25 +425,31 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 					}
 					if (x > 0) {
 						left = origin.getNeighbour(0, y);
-						left.resize(x, 1, claimedTerminal != null);
-						if (claimedTerminal == null) {
-							claimedTerminal = left.mon;
+						if (left != null) {
+							left.resize(x, 1, claimedTerminal != null);
+							if (claimedTerminal == null) {
+								claimedTerminal = left.mon;
+							}
 						}
 					}
 					if (x + 1 < width) {
 						right = origin.getNeighbour(x + 1, y);
-						right.resize(width - (x + 1), 1,
-								claimedTerminal != null);
-						if (claimedTerminal == null) {
-							claimedTerminal = right.mon;
+						if (right != null) {
+							right.resize(width - (x + 1), 1,
+									claimedTerminal != null);
+							if (claimedTerminal == null) {
+								claimedTerminal = right.mon;
+							}
 						}
 					}
 					if (claimedTerminal != null)
 						claimedTerminal.removeAllGPUs();
 					if (y + 1 < height) {
 						below = origin.getNeighbour(0, y + 1);
-						below.resize(width, height - (y + 1),
-								claimedTerminal != null);
+						if (below != null) {
+							below.resize(width, height - (y + 1),
+									claimedTerminal != null);
+						}
 					}
 
 					if (above != null) {
@@ -464,7 +472,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 
 	@Override
 	public void updateEntity() {
-		if (dirty || m_tts-- < 0) {
+		if (!worldObj.isRemote && (dirty || m_tts-- < 0)) {
 			// Send update packet
 			PacketSenders.ExternalMonitorUpdate(xCoord, yCoord, zCoord, worldObj.provider.dimensionId,m_width, m_height,m_xIndex,m_yIndex,m_dir);
 			dirty = false;
@@ -484,7 +492,7 @@ public class TileEntityExternalMonitor extends TileEntityMonitor {
 	public class ExternalMonitorObject extends MonitorObject {
 		@Callback(direct=true)
 		public Object[] getDPM(Context context, Arguments arguments) {
-			return new Object[]{32};
+			return new Object[]{RES};
 		}
 		
 		@Callback(direct=true)
