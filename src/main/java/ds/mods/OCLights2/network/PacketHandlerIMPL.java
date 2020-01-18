@@ -12,7 +12,6 @@ import java.util.zip.GZIPInputStream;
 import li.cil.oc.api.machine.Context;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.server.MinecraftServer;
@@ -332,6 +331,13 @@ public class PacketHandlerIMPL {
 			break;
 		}
 		case (NET_SYNC): {
+			Config.widthMon = PacketData.readInt();
+			Config.heightMon = PacketData.readInt();
+			Config.widthTab = PacketData.readInt();
+			Config.heightTab = PacketData.readInt();
+			Config.widthExt = PacketData.readInt();
+			Config.heightExt = PacketData.readInt();
+			Config.resExt = PacketData.readInt();
 		}
 		}
 	}
@@ -363,10 +369,10 @@ public class PacketHandlerIMPL {
 	}
 
 	public void playerLoggedIn(EntityPlayer player, INetHandler netHandler, NetworkManager manager) {
-		if (Config.monitorSize[0] != 256 || Config.monitorSize[1] != 144) {
-			if (MinecraftServer.getServer().isDedicatedServer()) {
-				PacketSenders.SYNC(Config.monitorSize[0], Config.monitorSize[1], player);
-			}
+		if (MinecraftServer.getServer().isDedicatedServer()) {
+			PacketSenders.SYNC(Config.widthMon, Config.heightMon,
+					Config.widthTab, Config.heightTab,
+					Config.widthExt, Config.heightExt, Config.resExt, player);
 		}
 	}
 
@@ -374,7 +380,6 @@ public class PacketHandlerIMPL {
 		if (Minecraft.getMinecraft().isSingleplayer()) {
 			OCLights2.debug("Singleplayer detected, sync not needed");
 		} else {
-			Config.setDefaults();
 			OCLights2.debug("PREP'd for SYNC");
 		}
 	}

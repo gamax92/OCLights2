@@ -3,6 +3,7 @@ package ds.mods.OCLights2.client.gui;
 import java.awt.Color;
 import java.util.UUID;
 
+import ds.mods.OCLights2.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -23,6 +24,10 @@ import ds.mods.OCLights2.network.PacketSenders;
 import ds.mods.OCLights2.utils.TabMesg;
 
 public class GuiTablet extends GuiScreen {
+
+	private static final int WIDTH = Config.widthTab;
+	private static final int HEIGHT = Config.heightTab;
+
 	Monitor mon;
 	Texture tex = TabletRenderer.defaultTexture;
 	NBTTagCompound nbt;
@@ -60,15 +65,15 @@ public class GuiTablet extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		if (oldScale != 1) {
+		if (oldScale != 1 && Config.scaleGui) {
 			oldScale = Minecraft.getMinecraft().gameSettings.guiScale;
 			Minecraft.getMinecraft().gameSettings.guiScale = 1;
-			ScaledResolution scaledresolution = new ScaledResolution(
-					this.mc, this.mc.displayWidth,
-					this.mc.displayHeight);
-			this.width = scaledresolution.getScaledWidth();
-			this.height = scaledresolution.getScaledHeight();
 		}
+		ScaledResolution scaledresolution = new ScaledResolution(
+				this.mc, this.mc.displayWidth,
+				this.mc.displayHeight);
+		this.width = scaledresolution.getScaledWidth();
+		this.height = scaledresolution.getScaledHeight();
 		Keyboard.enableRepeatEvents(true);
 	}
 
@@ -90,6 +95,7 @@ public class GuiTablet extends GuiScreen {
 
 	@Override
 	public void drawScreen(int x, int y, float par3) {
+
 		x = applyXOffset(x);
 		y = applyYOffset(y);
 		if (nbt.getBoolean("canDisplay")) {
@@ -98,8 +104,7 @@ public class GuiTablet extends GuiScreen {
 				PacketSenders.GPUEvent(x, y, tile, wheel);
 			}
 			if (isMouseDown) {
-				if (x > -1 & y > -1 & x < mon.getWidth() + 1
-						& y < mon.getHeight() + 1) {
+				if (x > -1 & y > -1 & x < mon.getWidth() + 1 & y < mon.getHeight() + 1) {
 					mx = x;
 					my = y;
 					if (mlx != mx | mly != my) {
@@ -108,8 +113,7 @@ public class GuiTablet extends GuiScreen {
 					mlx = mx;
 					mly = my;
 				} else {
-					mouseMovedOrUp(unapplyXOffset(x) / 2,
-							unapplyYOffset(y) / 2, mouseButton);
+					mouseMovedOrUp(unapplyXOffset(x) / 2, unapplyYOffset(y) / 2, mouseButton);
 				}
 			}
 		}
@@ -123,10 +127,8 @@ public class GuiTablet extends GuiScreen {
 				e.printStackTrace();
 			}
 		}
-		TextureUtil.uploadTexture(TabletRenderer.dyntex.getGlTextureId(),
-				tex.rgbCache, 16 * 32, 9 * 32);
-		drawTexturedModalRect(unapplyXOffset(0), unapplyYOffset(0),
-				tex.getWidth(), tex.getHeight());
+		TextureUtil.uploadTexture(TabletRenderer.dyntex.getGlTextureId(), tex.rgbCache, WIDTH, HEIGHT);
+		drawTexturedModalRect(unapplyXOffset(0), unapplyYOffset(0), tex.getWidth(), tex.getHeight());
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 
@@ -139,12 +141,10 @@ public class GuiTablet extends GuiScreen {
 		GL11.glPushMatrix();
 		GL11.glScaled(1D, 1D, 1D);
 		var2.startDrawingQuads();
-		var2.addVertexWithUV(x, y, this.zLevel, 0.0D, 0D);
-		var2.addVertexWithUV(x, (double) h + y, this.zLevel, 0.0D, h
-				/ (9 * 32D));
-		var2.addVertexWithUV((double) w + x, (double) h + y, this.zLevel, w
-				/ (16 * 32D), h / (9 * 32D));
-		var2.addVertexWithUV((double) w + x, y, this.zLevel, w / (16 * 32D), 0D);
+		var2.addVertexWithUV(x, y, this.zLevel, 0.0D, 0.0D);
+		var2.addVertexWithUV(x, (double) h + y, this.zLevel, 0.0D, 1.0D);
+		var2.addVertexWithUV((double) w + x, (double) h + y, this.zLevel, 1.0D, 1.0D);
+		var2.addVertexWithUV((double) w + x, y, this.zLevel, 1.0D, 0.0D);
 		var2.draw();
 		GL11.glPopMatrix();
 	}
@@ -207,7 +207,8 @@ public class GuiTablet extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
-		Minecraft.getMinecraft().gameSettings.guiScale = oldScale;
+		if (Config.scaleGui)
+			Minecraft.getMinecraft().gameSettings.guiScale = oldScale;
 	}
 
 	@Override

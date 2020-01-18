@@ -766,7 +766,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 			node.save(nodeNbt);
 			nbt.setTag("oc:node", nodeNbt);
 		}
-		if (fileSystem.node() != null) {
+		if (fileSystem != null && fileSystem.node() != null) {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
 			fileSystem.node().save(nodeNbt);
 			nbt.setTag("oc:fsnode", nodeNbt);
@@ -798,7 +798,7 @@ public class TileEntityGPU extends TileEntity implements Environment {
 		if (node != null && node.host() == this) {
 			node.load(nbt.getCompoundTag("oc:node"));
 		}
-		if (fileSystem.node() != null) {
+		if (fileSystem != null && fileSystem.node() != null) {
 			fileSystem.node().load(nbt.getCompoundTag("oc:fsnode"));
 		}
 		addedType = nbt.getIntArray("addedTypes");

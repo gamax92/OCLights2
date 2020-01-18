@@ -2,6 +2,8 @@ package ds.mods.OCLights2.client.render;
 
 import java.awt.Color;
 
+import cpw.mods.fml.common.Loader;
+import ds.mods.OCLights2.Config;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -24,6 +26,10 @@ import ds.mods.OCLights2.gpu.Texture;
 public class TileEntityExternalMonitorRenderer extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler{
 	
 	public DynamicTexture texture;
+
+	private static final int WIDTH = Config.widthExt;
+	private static final int HEIGHT = Config.heightExt;
+	private static final int RES = Config.resExt;
 	
 	TextureManager re;
 	
@@ -32,7 +38,7 @@ public class TileEntityExternalMonitorRenderer extends TileEntitySpecialRenderer
 	public TileEntityExternalMonitorRenderer()
 	{
 		re = Minecraft.getMinecraft().renderEngine;
-		texture = new DynamicTexture(16*32, 9*32);
+		texture = new DynamicTexture(WIDTH*RES, HEIGHT*RES);
 		tile.mon.tex.fill(Color.blue);
 		tile.mon.tex.drawText("Hello,", 0, 0, Color.white);
 		tile.mon.tex.drawText("World!", 0, 9, Color.white); //Yes, the fake ass wrap trick
@@ -82,13 +88,17 @@ public class TileEntityExternalMonitorRenderer extends TileEntitySpecialRenderer
 				e.printStackTrace();
 			}
 		}
-		TextureUtil.uploadTexture(texture.getGlTextureId(), tex.rgbCache, 16*32, 9*32);
+		TextureUtil.uploadTexture(texture.getGlTextureId(), tex.rgbCache, m.mon.getWidth(), m.mon.getHeight());
 		GL11.glDisable(GL11.GL_LIGHTING);
 		t.startDrawingQuads();
-		t.addVertexWithUV(-0.5F, 0.5F, 0.501F, 0F, (m.m_height*32F)/(9*32F));
-		t.addVertexWithUV(0.5F, 0.5F, 0.501F, (m.m_width*32F)/(16*32F), (m.m_height*32F)/(9*32F));
-		t.addVertexWithUV(0.5F, 1.5F, 0.501F, (m.m_width*32F)/(16*32F), 0F);
-		t.addVertexWithUV(-0.5F, 1.5F, 0.501F, 0F, 0F);
+		if (!Loader.isModLoaded("coloredlightscore"))
+			t.setBrightness(0x00F000F0);
+		else
+			t.setBrightness(0xFFFFF);
+		t.addVertexWithUV(-0.5F, 0.5F, 0.5F, 0F, (m.m_height*(float)RES)/(HEIGHT*(float)RES));
+		t.addVertexWithUV(0.5F, 0.5F, 0.5F, (m.m_width*(float)RES)/(WIDTH*(float)RES), (m.m_height*(float)RES)/(HEIGHT*(float)RES));
+		t.addVertexWithUV(0.5F, 1.5F, 0.5F, (m.m_width * (float)RES) / (WIDTH * (float)RES), 0F);
+		t.addVertexWithUV(-0.5F, 1.5F, 0.5F, 0F, 0F);
 		t.draw();
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}

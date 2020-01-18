@@ -3,6 +3,8 @@ package ds.mods.OCLights2.client.render;
 import java.awt.Color;
 import java.util.UUID;
 
+import cpw.mods.fml.common.Loader;
+import ds.mods.OCLights2.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -26,27 +28,30 @@ import ds.mods.OCLights2.item.ItemTablet;
 import ds.mods.OCLights2.utils.TabMesg;
 
 public class TabletRenderer implements IItemRenderer {
+
+	private static final int WIDTH = Config.widthTab;
+	private static final int HEIGHT = Config.heightTab;
 	
 	ModelTablet model = new ModelTablet();
 	TextureManager re;
 	ResourceLocation texture = new ResourceLocation("oclights", "textures/items/Tablet.png");
-	public static Texture defaultTexture = new Texture(16*32, 9*32);
-	public static Texture errorTexture = new Texture(16*32, 9*32);
-	public static DynamicTexture dyntex = new DynamicTexture(16*32,9*32);
+	public static Texture defaultTexture = new Texture(WIDTH, HEIGHT);
+	public static Texture errorTexture = new Texture(WIDTH, HEIGHT);
+	public static DynamicTexture dyntex = new DynamicTexture(WIDTH,HEIGHT);
 	public static int[] dyntex_data;
 	
 	public TabletRenderer()
 	{
 		dyntex_data = dyntex.getTextureData();
 		
-		defaultTexture.rgbCache = new int[16*32*9*32];
+		defaultTexture.rgbCache = new int[WIDTH*HEIGHT];
 		defaultTexture.fill(Color.blue);
 		defaultTexture.drawText("Hello, World!", 0, 0, Color.white);
 		defaultTexture.drawText("Please configure the tablet with a Tablet Transmitter.", 0, 9, Color.white);
 		defaultTexture.drawText("You can do this by right clicking it with your tablet.", 0, 18, Color.white);
 		defaultTexture.texUpdate();
 		
-		errorTexture.rgbCache = new int[16*32*9*32];
+		errorTexture.rgbCache = new int[WIDTH*HEIGHT];
 		errorTexture.fill(Color.red);
 		errorTexture.drawText("Out of range.", 0, 0, Color.white);
 		errorTexture.texUpdate();
@@ -156,15 +161,18 @@ public class TabletRenderer implements IItemRenderer {
 					nbt.setBoolean("canDisplay", false);
 			}
 			GL11.glTranslatef(0F, -0.0001F, 0F);
-			TextureUtil.uploadTexture(dyntex.getGlTextureId(), tex.rgbCache, 16*32, 9*32);
+			TextureUtil.uploadTexture(dyntex.getGlTextureId(), tex.rgbCache, WIDTH, HEIGHT);
 			Tessellator tess = Tessellator.instance;
 			GL11.glDisable(GL11.GL_LIGHTING);
 			tess.startDrawingQuads();
-			tess.setBrightness(0xFF);
-			tess.addVertexWithUV(-8/16D, 0.5D-(2/16D), -(6/16D),0D,((double)tex.getHeight())/(9*32));
-			tess.addVertexWithUV(0.5D, 0.5D-(2/16D), -(6/16D),((double)tex.getWidth())/(16*32),((double)tex.getHeight())/(9*32));
-			tess.addVertexWithUV(0.5D, 0.5D-(2/16D), (3/16D),((double)tex.getWidth())/(16*32),0D);
-			tess.addVertexWithUV(-8/16D, 0.5D-(2/16D), (3/16D),0D,0D);
+			if (!Loader.isModLoaded("coloredlightscore"))
+				tess.setBrightness(0x00F000F0);
+			else
+				tess.setBrightness(0xFFFFF);
+			tess.addVertexWithUV(-8/16D, 0.5D-(2/16D), -(6/16D),0.0D,1.0D);
+			tess.addVertexWithUV(0.5D, 0.5D-(2/16D), -(6/16D),1.0D,1.0D);
+			tess.addVertexWithUV(0.5D, 0.5D-(2/16D), (3/16D),1.0D,0.0D);
+			tess.addVertexWithUV(-8/16D, 0.5D-(2/16D), (3/16D),0.0D,0.0D);
 			tess.draw();
 			GL11.glEnable(GL11.GL_LIGHTING);
 		}

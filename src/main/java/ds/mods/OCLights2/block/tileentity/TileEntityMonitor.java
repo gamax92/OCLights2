@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import ds.mods.OCLights2.Config;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -25,10 +26,13 @@ import ds.mods.OCLights2.gpu.GPU;
 import ds.mods.OCLights2.gpu.Monitor;
 
 public class TileEntityMonitor extends TileEntity {
+	private static final int WIDTH = Config.widthMon;
+	private static final int HEIGHT = Config.heightMon;
+
 	public Monitor mon;
 
 	public TileEntityMonitor() {
-		mon = new Monitor(256, 144, getMonitorObject());
+		mon = new Monitor(WIDTH, HEIGHT, getMonitorObject());
 		mon.tex.fill(Color.black);
 	}
 

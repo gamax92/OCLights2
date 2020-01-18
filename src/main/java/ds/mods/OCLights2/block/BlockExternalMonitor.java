@@ -1,5 +1,6 @@
 package ds.mods.OCLights2.block;
 
+import ds.mods.OCLights2.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -16,6 +17,9 @@ import ds.mods.OCLights2.block.tileentity.TileEntityExternalMonitor;
 import ds.mods.OCLights2.gpu.GPU;
 
 public class BlockExternalMonitor extends Block {
+
+	private static final int RES = Config.resExt;
+
 	public BlockExternalMonitor(Material par2Material) {
 		super(par2Material);
 		this.setBlockName("monitor.big");
@@ -36,6 +40,7 @@ public class BlockExternalMonitor extends Block {
 		TileEntityExternalMonitor tile = (TileEntityExternalMonitor) world.getTileEntity(par2,par3,par4);
 		float x = 0f;
 		float y = 0f;
+		boolean flip = false;
 		switch (tile.m_dir)
 		{
 			case 0:
@@ -55,8 +60,9 @@ public class BlockExternalMonitor extends Block {
 			{
 				if (vecX == 1.0f)
 				{
-					x = vecY;
-					y = vecZ;
+					x = 1F-vecZ;
+					y = vecY;
+					flip = true;
 				}
 				else
 				{
@@ -81,8 +87,9 @@ public class BlockExternalMonitor extends Block {
 			{
 				if (vecX == 0.0f)
 				{
-					x = vecY;
-					y = vecZ;
+					x = vecZ;
+					y = vecY;
+					flip = true;
 				}
 				else
 				{
@@ -91,15 +98,22 @@ public class BlockExternalMonitor extends Block {
 				break;
 			}
 		}
-		int px = (int) Math.floor(x*32F);
-		int py = (int) Math.floor((1F-y)*32F);
-		px+=(tile.m_width-tile.m_xIndex-1)*32;
-		py+=(tile.m_height-tile.m_yIndex-1)*32;
+		int px = (int) Math.floor(x*(float)RES);
+		int py = (int) Math.floor((1F-y)*(float)RES);
+		if (flip)
+			px+=tile.m_xIndex*RES;
+		else
+			px+=(tile.m_width-tile.m_xIndex-1)*RES;
+		py+=(tile.m_height-tile.m_yIndex-1)*RES;
 		if (!world.isRemote)
 		{
 			//Send it to the tileentity!
 			if (tile.mon != null && tile.mon.gpu != null)
 			{
+				if (tile.mon.gpu.size() == 0)
+				{
+					tile.rebuildTerminal(tile.mon);
+				}
 				for (GPU g : tile.mon.gpu)
 				{
 					g.tile.startClick((EntityPlayer) par5EntityPlayer, 0, px, py);
